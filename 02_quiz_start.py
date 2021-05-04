@@ -52,7 +52,7 @@ class Start:
 
 class Setup:
     def __init__(self, partner):
-        print("Program setuped")
+        print("Program set")
 
         #set toplevel
 

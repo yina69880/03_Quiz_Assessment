@@ -262,20 +262,20 @@ class Warning:
     def __init__(self, partner):
         print("Program warning")
 
-        # set Toplevel
+        #Set Toplevel
 
         self.warning_box = Toplevel()
 
-        # set up closing behaviour
+        #Set up closing behaviour
 
         self.warning_box.protocol('WM_DELETE_WINDOW', partial(self.dismiss, partner))
 
-        # set up frame
+        #Set up frame
 
         self.warning_frame = Frame(self.warning_box, padx=50, pady=5)
         self.warning_frame.grid()
 
-        # header text
+        #Header text
 
         self.warning_text = Label(self.warning_frame, text="Warning")
         self.warning_text.grid(row=0)
