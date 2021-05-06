@@ -11,7 +11,7 @@ class Start:
 
         # set up frame
 
-        self.start_frame = Frame(padx=50, pady=5)
+        self.start_frame = Frame(padx=80, pady=5)
         self.start_frame.grid()
 
         # header text
@@ -68,7 +68,7 @@ class Setup:
 
         # instruction text
 
-        self.instructions_text = Label(self.setup_frame, text="PLease select the correct name that is decribed \n",
+        self.instructions_text = Label(self.setup_frame, text="Please select the culture you wanna play \n",
                                        font=("Arial", "9"))
         self.instructions_text.grid(row=1, pady=5)
 
@@ -81,23 +81,18 @@ class Setup:
 
         # row 1
 
-        self.atomic_number_button = Button(self.answer_frame, text="Atomic\nNumber", width=10, height=2,
+        self.atomic_number_button = Button(self.answer_frame, text="Norse", width=10, height=2,
                                           command=lambda: self.update_numbers(self.atomic_number_button, "top"))
         self.atomic_number_button.grid(row=0, column=0, padx=5, pady=5)
 
-        self.mass_number_button = Button(self.answer_frame, text="Mass\nNumber", width=10, height=2,
+        self.mass_number_button = Button(self.answer_frame, text="Greek", width=10, height=2,
                                           command=lambda: self.update_numbers(self.mass_number_button, "top"))
         self.mass_number_button.grid(row=0, column=1, padx=5, pady=5)
 
-        self.name_button = Button(self.answer_frame, text="Name of\nElement", width=10, height=2,
+        self.name_button = Button(self.answer_frame, text="Egyptian", width=10, height=2,
                                           command=lambda: self.update_numbers(self.name_button, "top"))
         self.name_button.grid(row=0, column=2, padx=5, pady=5)
 
-        
-        # top buttons label
-
-        self.top_label = Label(self.setup_frame, text="Please select what you would like to practice")
-        self.top_label.grid(row=3, pady=5)
 
         # bottom buttons
 
@@ -108,30 +103,6 @@ class Setup:
 
         # Given buttons
 
-        # row 1
-
-        self.atomic_number_button_given = Button(self.given_frame, text="Atomic\nNumber", width=10, height=2,
-                                          command=lambda: self.update_numbers(self.atomic_number_button_given, "bot"))
-        self.atomic_number_button_given.grid(row=0, column=0, padx=5, pady=5)
-
-        self.mass_number_button_given = Button(self.given_frame, text="Mass\nNumber", width=10, height=2,
-                                          command=lambda: self.update_numbers(self.mass_number_button_given, "bot"))
-        self.mass_number_button_given.grid(row=0, column=1, padx=5, pady=5)
-
-        self.name_button_given = Button(self.given_frame, text="Name of\nElement", width=10, height=2,
-                                          command=lambda: self.update_numbers(self.name_button_given, "bot"))
-        self.name_button_given.grid(row=0, column=2, padx=5, pady=5)
-
-        # row 2
-
-        self.symbol_button_given = Button(self.given_frame, text="Element\nSymbol", width=10, height=2,
-                                          command=lambda: self.update_numbers(self.symbol_button_given, "bot"))
-        self.symbol_button_given.grid(row=1, column=1, padx=5, pady=5)
-
-        # bottom buttons label
-
-        self.bottom_label = Label(self.setup_frame, text="Please select what you would like to be given")
-        self.bottom_label.grid(row=5, pady=5)
 
         # frame for buttons
 
