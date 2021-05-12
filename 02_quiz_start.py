@@ -7,7 +7,6 @@ import random
 
 class Start:
     def __init__(self):
-        print("Program started")
 
         # prevents resizing box
         root.resizable(False, False)
@@ -35,7 +34,7 @@ class Start:
 
         # setup button
 
-        self.setup_button = Button(self.setup_quit_button_frame, text="Start quiz",
+        self.setup_button = Button(self.setup_quit_button_frame, text="Begin quiz",
                                     pady=10, padx=100,command=lambda: self.open_setup())
         self.setup_button.grid(row=0, column=0, padx=5)
 
@@ -52,7 +51,6 @@ class Start:
 
 class Setup:
     def __init__(self, partner):
-        print("Program set")
 
         #set toplevel
 

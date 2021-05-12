@@ -7,7 +7,6 @@ import random
 
 class Start:
     def __init__(self):
-        print("Program started")
 
         # set up frame
 
@@ -41,7 +40,6 @@ class Start:
 
 class Setup:
     def __init__(self, partner):
-        print("Program set")
 
         #set toplevel
 
@@ -94,7 +92,7 @@ class Setup:
         self.name_button.grid(row=0, column=2, padx=5, pady=5)
 
 
-        # bottom buttons
+        #bottom buttons
 
         # frame for given options
 
@@ -109,15 +107,11 @@ class Setup:
         self.play_quit_button_frame = Frame(self.setup_frame)
         self.play_quit_button_frame.grid(row=6, pady=5)
 
-        # play button
-
-        self.play_button = Button(self.play_quit_button_frame, text="Play", command=lambda: self.open_play(),
-                                  state=DISABLED)
-        self.play_button.grid(row=0, column=0, padx=5)
 
         # quit button
 
-        self.quit_button = Button(self.play_quit_button_frame, text="Quit", command=partial(root.destroy))
+        self.quit_button = Button(self.play_quit_button_frame, text="Quit",
+                                  command=partial(root.destroy))
         self.quit_button.grid(row=0, column=1, padx=5)
 
     def open_play(self):
