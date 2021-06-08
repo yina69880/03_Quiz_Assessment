@@ -1,493 +1,796 @@
-# Copied component 1
-
 from tkinter import *
-from functools import partial  # To prevent unwanted windows
+from functools import partial
 import csv
 import random
-
+import re
 
 class Start:
     def __init__(self):
-        print("Program started")
+        # Color is light yellow
+        background = "#FFF4C3"
 
-        # set up frame
+        self.rounds = 0
 
-        self.start_frame = Frame(padx=50, pady=5)
+        # Start GUI
+        self.start_box = Toplevel()
+        self.start_frame = Frame(self.start_box,padx=10, pady=10, bg=background)
         self.start_frame.grid()
 
-        # header text
+        # Country Capital Quiz Heading row 0
+        self.capital_label = Label(self.start_frame, text="Country Capital Quiz",
+                                   font="Helvetica 30 bold", bg=background)
+        self.capital_label.grid(row=0)
 
-        self.start_text = Label(self.start_frame, text="Start")
-        self.start_text.grid(row=0)
-
-        # frame for buttons
-
-        self.setup_quit_button_frame = Frame(self.start_frame)
-        self.setup_quit_button_frame.grid(row=1)
-
-        # setup button
-
-        self.setup_button = Button(self.setup_quit_button_frame, text="Setup", command=lambda: self.open_setup())
-        self.setup_button.grid(row=1, column=0, padx=5)
-
-        # quit button
-
-        self.quit_button = Button(self.setup_quit_button_frame, text="Quit", command=partial(root.destroy))
-        self.quit_button.grid(row=1, column=1, padx=5)
-
-    def open_setup(self):
-        Setup(self)
-        root.withdraw()
+        # Sub text and Instructions for the game row 1
+        self.subtext_label = Label(self.start_frame, text="How well do you know world's capitals? \n\n"
+                                                          "You'll be presented with capitals from a list of 242 "
+                                                          "capitals.\n"
+                                                          "You'll need to match the capitals with their corresponding "
+                                                          "country. \n\n "
+                                                          "Please select the amount of rounds and difficulty you wish to play.",
+                                   font="Arial 10", bg=background)
+        self.subtext_label.grid(row=1)
 
 
-class Setup:
-    def __init__(self, partner):
-        print("Program setuped")
+        # Round warning text row 2
 
-        #set toplevel
+        self.round_warning = Label(self.start_frame,text="If left blank there will be infinity rounds",
+                                   font="Helvetica 9 italic", fg="red",bg=background)
+        self.round_warning.grid(row=2, column=0)
 
-        self.setup_box = Toplevel()
+        # Frame for rounds row 3
+        self.round_frame = Frame(self.start_frame, bg=background)
+        self.round_frame.grid(row=3)
 
-        # set up closing behaviour
+        # Round Label row 0.0
+        self.round_label=Label(self.round_frame,text="Rounds:", bg=background, font="helvetica 15")
+        self.round_label.grid(row=0,column=0)
 
-        self.setup_box.protocol('WM_DELETE_WINDOW', partial(root.destroy))
+        # Round Entry row 0.1
+        self.round_entry = Entry(self.round_frame,font="Helvetica 20", bg="#FFFFFF"
+                                 ,width=5)
+        self.round_entry.grid(row=0,column=1,padx=5,pady=5)
 
-        # set up frame
+        # to_game button frame row 4
+        self.to_game_frame = Frame(self.start_frame, bg=background)
+        self.to_game_frame.grid(row=4)
 
-        self.setup_frame = Frame(self.setup_box, padx=50, pady=5)
-        self.setup_frame.grid()
+        # Button Font
+        button_font = "Arial 15 bold"
 
-        # Stored variables
+        # to_game buttons row 4.0
+        self.easy_button = Button(self.to_game_frame, text="Easy", font=button_font, bg="#99CCFF",
+                                  command=self.to_easy, height=2, width=13, borderwidth=2,relief="raised")
+        self.easy_button.grid(row=0, column=0, padx=10, pady=5)
 
-        self.answer_option = ""
-        self.given_option = ""
+        # to_hard buttons row 4.1
+        self.hard_button = Button(self.to_game_frame, text="Hard", font=button_font, bg="#FFBAB8",
+                                  command=self.to_hard, height=2, width=13, borderwidth=2,relief="raised")
+        self.hard_button.grid(row=0, column=1, padx=10, pady=5)
 
-        # header text
+        # Help Button row 5
+        self.help_button = Button(self.start_frame, text="Help", font="Helvetica 10 bold", height=2, width=10,
+                                  borderwidth=3, command=self.help)
+        self.help_button.grid(row=5, pady=5)
 
-        self.setup_text = Label(self.setup_frame, text="Setup", font=("Arial", "16", "bold"))
-        self.setup_text.grid(row=0, pady=5)
-
-        # instruction text
-
-        self.instructions_text = Label(self.setup_frame, text="PLease choose what you would like to practice and what\n"
-                                                              "what information will be given",
-                                       font=("Arial", "9"))
-        self.instructions_text.grid(row=1, pady=5)
-
-        # frame for answer options
-
-        self.answer_frame = Frame(self.setup_frame)
-        self.answer_frame.grid(row=2, pady=5)
-
-        # Answer buttons
-
-        # row 1
-
-        self.atomic_number_button = Button(self.answer_frame, text="Atomic\nNumber", width=10, height=2,
-                                          command=lambda: self.update_numbers(self.atomic_number_button, "top", 0))
-        self.atomic_number_button.grid(row=0, column=0, padx=5, pady=5)
-
-        self.mass_number_button = Button(self.answer_frame, text="Mass\nNumber", width=10, height=2,
-                                          command=lambda: self.update_numbers(self.mass_number_button, "top", 5))
-        self.mass_number_button.grid(row=0, column=1, padx=5, pady=5)
-
-        self.name_button = Button(self.answer_frame, text="Name of\nElement", width=10, height=2,
-                                          command=lambda: self.update_numbers(self.name_button, "top", 1))
-        self.name_button.grid(row=0, column=2, padx=5, pady=5)
-
-        # row 2
-
-        self.symbol_button = Button(self.answer_frame, text="Element\nSymbol", width=10, height=2,
-                                          command=lambda: self.update_numbers(self.symbol_button, "top", 2))
-        self.symbol_button.grid(row=1, column=0, padx=5, pady=5)
-
-        self.group_button = Button(self.answer_frame, text="Group", width=10, height=2,
-                                          command=lambda: self.update_numbers(self.group_button, "top", 3))
-        self.group_button.grid(row=1, column=1, padx=5, pady=5)
-
-        self.period_button = Button(self.answer_frame, text="Period", width=10, height=2,
-                                          command=lambda: self.update_numbers(self.period_button, "top", 4))
-        self.period_button.grid(row=1, column=2, padx=5, pady=5)
-
-        # top buttons label
-
-        self.top_label = Label(self.setup_frame, text="Please select what you would like to practice")
-        self.top_label.grid(row=3, pady=5)
-
-        # bottom buttons
-
-        # frame for given options
-
-        self.given_frame = Frame(self.setup_frame)
-        self.given_frame.grid(row=4, pady=5)
-
-        # Given buttons
-
-        # row 1
-
-        self.atomic_number_button_given = Button(self.given_frame, text="Atomic\nNumber", width=10, height=2,
-                                          command=lambda: self.update_numbers(self.atomic_number_button_given,
-                                                                              "bot", 0))
-        self.atomic_number_button_given.grid(row=0, column=0, padx=5, pady=5)
-
-        self.mass_number_button_given = Button(self.given_frame, text="Mass\nNumber", width=10, height=2,
-                                          command=lambda: self.update_numbers(self.mass_number_button_given,
-                                                                              "bot", 5))
-        self.mass_number_button_given.grid(row=0, column=1, padx=5, pady=5)
-
-        self.name_button_given = Button(self.given_frame, text="Name of\nElement", width=10, height=2,
-                                          command=lambda: self.update_numbers(self.name_button_given,
-                                                                              "bot", 1))
-        self.name_button_given.grid(row=0, column=2, padx=5, pady=5)
-
-        # row 2
-
-        self.symbol_button_given = Button(self.given_frame, text="Element\nSymbol", width=10, height=2,
-                                          command=lambda: self.update_numbers(self.symbol_button_given,
-                                                                              "bot", 2))
-        self.symbol_button_given.grid(row=1, column=1, padx=5, pady=5)
-
-        # bottom buttons label
-
-        self.bottom_label = Label(self.setup_frame, text="Please select what you would like to be given")
-        self.bottom_label.grid(row=5, pady=5)
-
-        # frame for buttons
-
-        self.play_quit_button_frame = Frame(self.setup_frame)
-        self.play_quit_button_frame.grid(row=6, pady=5)
-
-        # play button
-
-        self.play_button = Button(self.play_quit_button_frame, text="Play", command=lambda: self.open_play(),
-                                  state=DISABLED)
-        self.play_button.grid(row=0, column=0, padx=5)
-
-        # quit button
-
-        self.quit_button = Button(self.play_quit_button_frame, text="Quit", command=partial(root.destroy))
-        self.quit_button.grid(row=0, column=1, padx=5)
-
-    def open_play(self):
-        Play(self)
-        self.setup_box.withdraw()
-
-    # update_numbers enables all buttons in category and then disables selected button,
-    # updates selected option variables
-
-    def update_numbers(self, option, category):
-        if category == "top":
-            self.symbol_button.configure(state=NORMAL)
-            self.atomic_number_button.configure(state=NORMAL)
-            self.mass_number_button.configure(state=NORMAL)
-            self.name_button.configure(state=NORMAL)
-            self.group_button.configure(state=NORMAL)
-            self.period_button.configure(state=NORMAL)
-            self.answer_option = option.cget('text').replace("\n", " ")
+    def to_easy(self):
+        self.rounds=self.round_entry.get()
+        if self.rounds == "":
+            self.rounds = int(999999999)
+            self.infinity = 1
+            Easy(self)
+            self.start_box.destroy()
         else:
-            self.symbol_button_given.configure(state=NORMAL)
-            self.atomic_number_button_given.configure(state=NORMAL)
-            self.mass_number_button_given.configure(state=NORMAL)
-            self.name_button_given.configure(state=NORMAL)
-            self.given_option = option.cget('text').replace("\n", " ")
-        if self.answer_option != "" and self.given_option != "":
-            self.play_button.configure(state=NORMAL)
+            try:
+                self.rounds = int(self.rounds)
+                self.infinity = 0
+                if self.rounds >= 1:
+                        Easy(self)
+                        self.start_box.destroy()
+                else:
+                    self.round_warning.config(bg="red", text="Please enter a number or remain blank", fg="#FFFFFF")
+                    self.round_entry.delete(0, "end")
+            except ValueError:
+                self.round_warning.config(bg="red",text="Please enter a number or remain blank",fg="#FFFFFF")
+                self.round_entry.delete(0,"end")
 
-        option.config(state=DISABLED)
 
+    def to_hard(self):
+        self.rounds=self.round_entry.get()
+        if self.rounds == "":
+            self.rounds = 999999999
+            self.infinity = 1
+            Hard(self)
+            self.start_box.destroy()
+        else:
+            self.rounds = int(self.rounds)
+            self.infinity = 0
+            try:
+                if self.rounds >= 1:
+                        Hard(self)
+                        self.start_box.destroy()
+                else:
+                    self.round_warning.config(bg="red", text="Please enter a number or remain blank", fg="#FFFFFF")
+                    self.round_entry.delete(0, "end")
+            except ValueError:
+                self.round_warning.config(bg="red",text="Please enter a number or remain blank",fg="#FFFFFF")
+                self.round_entry.delete(0,"end")
+    def help(self):
+        get_help = Help(self)
+        get_help.help_text.configure(text="The quiz will present you with a capital \nYou must identify the "
+                                          "corresponding country.\n\n"
+                                          "Easy mode is a multiple choice quiz.\n"
+                                          "Hard mode you must type in the answer.\n\n"
+                                        "The answers can be case insensitive.\nHowever, they must have proper "
+                                          "spacing and spelling.\n\n"
+                                          "For the hard mode you may press <Enter> to check your answer and to move on"
+                                          "to the next question.\n\n"
+                                        "The End game button will end the current attempt at the quiz and show your "
+                                          "statistics. \n"
+                                        "The statistics can be exported into a text file")
 
-class Play:
-    def __init__(self, partner):
-        print("Program played")
-
-        # set up element list
-
-        with open('elements.csv', newline='') as f:
-            reader = csv.reader(f)
-            self.element_data = list(reader)
-
-        # set toplevel
-
-        self.play_box = Toplevel()
-
-        # set up closing behaviour
-
-        self.play_box.protocol('WM_DELETE_WINDOW', partial(root.destroy))
-
-        # set up frame
-
-        self.play_frame = Frame(self.play_box, padx=5, pady=5)
-        self.play_frame.grid()
-
-        # header text
-
-        self.play_text = Label(self.play_frame, text="Periodic Table Quiz", font=("Arial", "16", "bold"))
-        self.play_text.grid(row=0)
-
-        # Rounds played / points
-
-        self.play_text = Label(self.play_frame, text="Rounds played: <x> / 10\n"
-                                                     "Points: <x>")
-        self.play_text.grid(row=1)
-
-        # Instructions / question
-
-        self.play_text = Label(self.play_frame, text="Select the correct answer to the question below...\n\n"
-                                                     "The {} of the element with the {} below "
-                                                     "is:".format(partner.answer_option.lower(),
-                                                                  partner.given_option.lower()))
-        self.play_text.grid(row=2)
-
-        # Given thing
-
-        self.play_text_given = Label(self.play_frame, text="{}: {}", font=("Arial", "14"))
-        self.play_text_given.grid(row=3)
-
-        # Option frame
-
-        self.option_frame = Frame(self.play_frame)
-        self.option_frame.grid(row=4, pady=5)
-
-        # top row
-
-        self.option_1 = Button(self.option_frame, text="1", height=2, width=20,
-                               command=lambda: self.answer_chosen(self.option_1))
-        self.option_1.grid(row=0, column=0, padx=5, pady=5)
-
-        self.option_2 = Button(self.option_frame, text="2", height=2, width=20,
-                               command=lambda: self.answer_chosen(self.option_2))
-        self.option_2.grid(row=0, column=1, padx=5, pady=5)
-
-        # bottom row
-
-        self.option_3 = Button(self.option_frame, text="3", height=2, width=20,
-                               command=lambda: self.answer_chosen(self.option_3))
-        self.option_3.grid(row=1, column=0, padx=5, pady=5)
-
-        self.option_4 = Button(self.option_frame, text="4", height=2, width=20,
-                               command=lambda: self.answer_chosen(self.option_4))
-        self.option_4.grid(row=1, column=1, padx=5, pady=5)
-
-        # Next button
-
-        self.next_button = Button(self.play_frame, text="Next", height=2, width=43,
-                                  command=lambda: self.next_pressed())
-
-        # frame for help / export buttons
-
-        self.help_stats_button_frame = Frame(self.play_frame)
-        self.help_stats_button_frame.grid(row=6, pady=5)
-
-        # help button
-
-        self.help_button = Button(self.help_stats_button_frame, text="Help", command=self.open_help,
-                                  height=2, width=20)
-        self.help_button.grid(row=0, column=0, padx=5)
-
-        # stats button
-
-        self.stats_button = Button(self.help_stats_button_frame, text="Stats", command=self.open_stats,
-                                   height=2, width=20)
-        self.stats_button.grid(row=0, column=1, padx=5)
-
-        # quit button
-
-        self.quit_button = Button(self.play_frame, text="Quit", height=2, width=43, command=partial(root.destroy))
-        self.quit_button.grid(row=7)
-
-    def update_option(self):
-        self.random_options = random.sample(self.element_data, 4)
-        self.option_1.configure(text="random_options[]")
-        self.option_2.configure(bg="pink")
-        self.option_3.configure(bg="pink")
-        self.option_4.configure(bg="pink")
-
-    def answer_chosen(self, chosen):
-        self.option_1.configure(bg="pink", state=DISABLED)
-        self.option_2.configure(bg="pink", state=DISABLED)
-        self.option_3.configure(bg="pink", state=DISABLED)
-        self.option_4.configure(bg="pink", state=DISABLED)
-        chosen.configure(bg="pale green")
-        self.next_button.grid(row=5)
-
-    def next_pressed(self):
-        self.option_1.configure(bg="white smoke", state=NORMAL)
-        self.option_2.configure(bg="white smoke", state=NORMAL)
-        self.option_3.configure(bg="white smoke", state=NORMAL)
-        self.option_4.configure(bg="white smoke", state=NORMAL)
-        self.next_button.grid_forget()
-
-    def open_help(self):
-        self.help_button.configure(state=DISABLED)
-        Help(self)
-
-    def open_stats(self):
-        self.stats_button.configure(state=DISABLED)
-        Stats(self)
 
 
 class Help:
     def __init__(self, partner):
-        print("Program helped")
+        background = "#FFF4C3"
 
-        # set Toplevel
+        # disable help button
+        partner.help_button.config(state=DISABLED)
 
+        # Sets up child window (ie: help box)
         self.help_box = Toplevel()
 
-        # set up closing behaviour
+        # If users press 'x' cross at the top, closes help and 'releases' help button.
+        self.help_box.protocol('WM_DELETE_WINDOW', partial(self.close_help, partner))
 
-        self.help_box.protocol('WM_DELETE_WINDOW', partial(self.dismiss, partner))
-
-        # set up frame
-
-        self.help_frame = Frame(self.help_box, padx=50, pady=5)
+        # Set up GUI Frame
+        self.help_frame = Frame(self.help_box, bg=background)
         self.help_frame.grid()
 
-        # header text
+        # Set up Help heading (row 0)
+        self.how_heading = Label(self.help_frame, text="Help / Information",
+                                 font=("Helvetica", "24", "bold",),
+                                 bg=background)
+        self.how_heading.grid(row=0)
 
-        self.help_text = Label(self.help_frame, text="Help")
-        self.help_text.grid(row=0)
+        # Help text (label, row 1)
+        self.help_text = Label(self.help_frame, text="", font="helvetica",
+                                bg=background, justify=LEFT,wrap=350)
+        self.help_text.grid(row=1)
 
-        # dismiss button
+        # Dismiss button (row 2)
+        self.dismiss_btn = Button(self.help_frame, text="Dismiss", width=10, bg="maroon", fg="white",
+                                  font="Helvetica" "10" "bold", command=partial(self.close_help, partner))
+        self.dismiss_btn.grid(row=2, pady=10)
 
-        self.quit_button = Button(self.help_frame, text="Dismiss", command=partial(self.dismiss, partner))
-        self.quit_button.grid(row=1, padx=5)
-
-    def dismiss(self, partner):
-        partner.help_button.configure(state=NORMAL)
+    def close_help(self, partner):
+        # Put help button back to normal...
+        partner.help_button.config(state=NORMAL)
         self.help_box.destroy()
 
 
-class Stats:
+def to_quit():
+    root.destroy()
+
+
+class Easy:
+    def __init__(self,partner):
+        # Background color is light yellow
+        background = "#FFF4C3"
+
+        # Import the csv file, name of csv file goes here...
+        with open('country-capitals.csv', 'r') as f:
+            # make csv file into list
+            file = csv.reader(f)
+            next(f)
+            my_list = list(file)
+
+        # List to store the answers
+        self.game_history = []
+
+        # Initial Score
+        self.score = 0
+
+        # Amount of total rounds
+        self.total_rounds = partner.rounds
+
+        self.infinity = partner.infinity
+
+        # Amounts of games played
+        self.played = 0
+
+        # chooses four different countries / capitals from the list
+        question_ans = random.choice(my_list)
+        if self.infinity == 0:
+            my_list.remove(question_ans)
+        else:
+            pass
+        yes = random.choice(my_list)
+        no = random.choice(my_list)
+        ok = random.choice(my_list)
+
+        # Defining variables for the capitals and countries,
+        # question is the capital in question
+        # self.answer is the correct answer
+        # incorrect[1,2,3] are the incorrect countries.
+        self.question = question_ans[1]
+        self.answer = question_ans[0]
+        self.hint = question_ans[2]
+        incorrect1 = yes[0]
+        incorrect2 = no[0]
+        incorrect3 = ok[0]
+
+        # I made the button_list a list so the list can be randomized so that the answer button locations is always
+        # different.
+        button_list = [self.answer, incorrect1, incorrect2, incorrect3]
+        random.shuffle(button_list)
+        # Defining the randomized list to their corresponding buttons
+        self.top_left = button_list[0]
+        self.top_right = button_list[1]
+        self.bottom_left = button_list[2]
+        self.bottom_right = button_list[3]
+
+        # GUI Setup
+        self.game_box = Toplevel(bg=background)
+        self.game_frame = Frame(self.game_box, bg=background)
+        self.game_frame.grid()
+        self.game_box.protocol('WM_DELETE_WINDOW', to_quit)
+
+        # Capital Label row 0
+        self.capital_label = Label(self.game_frame, text=self.question,
+                                   font="Helvetica 15 bold", bg=background)
+        self.capital_label.grid(row=0)
+
+        # Label showing correct or incorrect row 1
+        self.answer_box = Label(self.game_frame, text="", font="Helvetica 12 italic", width=45, bg=background)
+        self.answer_box.grid(row=1)
+
+        # Setup grid for answer buttons row 2
+        self.top_answers_frame = Frame(self.game_box, width=50, height=50, bg=background)
+        self.top_answers_frame.grid(row=2, padx=5)
+
+        # width, wrap, font height for buttons
+        wt = 20
+        ht = 2
+        wr = 160
+        ft = "Helvetica 15"
+
+        # Top level answers buttons row 2.0
+        self.top_left_answer_button = Button(self.top_answers_frame, text=self.top_left,
+                                             font=ft, padx=5, pady=5, width=wt, height=ht, wrap=wr, bg="#EEE6D2",
+                                             command=lambda: self.reveal_answer(self.top_left))
+        self.top_left_answer_button.grid(column=0, row=0, padx=5, pady=5)
+
+        self.top_right_answer_button = Button(self.top_answers_frame, text=self.top_right,
+                                              font=ft, padx=5, pady=5, width=wt, height=ht, wrap=wr, bg="#EEE6D2",
+                                              command=lambda: self.reveal_answer(self.top_right))
+        self.top_right_answer_button.grid(column=1, row=0, padx=5, pady=5)
+
+        # Bottom level answers buttons row 2.1
+        self.bottom_left_answer_button = Button(self.top_answers_frame, text=self.bottom_left,
+                                                font=ft, padx=5, pady=5, width=wt, height=ht, wrap=wr, bg="#EEE6D2",
+                                                command=lambda: self.reveal_answer(self.bottom_left))
+        self.bottom_left_answer_button.grid(column=0, row=1, padx=5, pady=5)
+
+        self.bottom_right_answer_button = Button(self.top_answers_frame, text=self.bottom_right,
+                                                 font=ft, padx=5, pady=5, width=wt, height=ht, wrap=wr, bg="#EEE6D2",
+                                                 command=lambda: self.reveal_answer(self.bottom_right))
+        self.bottom_right_answer_button.grid(column=1, row=1, padx=5, pady=5)
+
+        # Label for the score and games played row 3
+        self.score_label = Label(self.game_box, text="{} correct, {} rounds played".format(self.score, self.played),
+                                 bg=background)
+        self.score_label.grid(row=3)
+
+        # Button frames for next, quit and hint button row 4
+        self.button_frame = Frame(self.game_box, bg=background)
+        self.button_frame.grid(row=4)
+
+        # The quit button so users can quit the game early row 0 column 1
+        self.quit_button = Button(self.button_frame, text="End Game", command=lambda:self.to_end(self.game_history)
+                                  , width=10,
+                                  font="Helvetica 10 bold")
+        self.quit_button.grid(row=0, column=0, padx=5, pady=8)
+
+        # The hint button to get the hint for this country row 0 column 1
+        self.hint_button = Button(self.button_frame, text="Hint", command=self.to_hint, width=10,
+                                  font="Helvetica 10 bold")
+        self.hint_button.grid(row=0, column=1, padx=5,pady=8)
+
+        # The Next button to proceed to the next round row 0 column 2
+        self.next_button = Button(self.button_frame, text="Next",
+                                  command=lambda: self.to_next(my_list, self.game_history,self.infinity), width=10,
+                                  font="Helvetica 10 bold")
+        self.next_button.grid(row=0, column=2, padx=5,pady=8)
+
+        # Disable the next button initially,
+        self.next_button.config(state=DISABLED)
+
+    def reveal_answer(self, location):
+
+        # Disable all the buttons
+        self.top_left_answer_button.config(state=DISABLED)
+        self.top_right_answer_button.config(state=DISABLED)
+        self.bottom_left_answer_button.config(state=DISABLED)
+        self.bottom_right_answer_button.config(state=DISABLED)
+        self.hint_button.config(state=DISABLED)
+
+        # Enable the next_button
+        self.next_button.config(state=NORMAL)
+
+        # Increase total rounds played by 1
+        self.played += 1
+
+        # Check if button is correct.
+        if location == self.answer:
+            self.answer_box.config(text="Correct!", fg="green")
+            self.score += 1
+            correct_answer = "{}, the answer was {} \u2713".format(self.question,self.answer)
+            self.game_history.append(correct_answer)
+        else:
+            self.answer_box.config(text="Incorrect, correct country is {}".format(self.answer), fg="red")
+            incorrect_answer = "{}, the answer was {} \u274c, you answered {}".format(self.question,self.answer,location)
+            self.game_history.append(incorrect_answer)
+
+        # Update the score that the user has
+        self.score_label.config(text="{} correct / {} rounds played".format(self.score, self.played))
+
+    def to_next(self, capital_list, history,infinity):
+        # if the amount of rounds played is 15 the player is taken to the end screen
+        if self.played == self.total_rounds:
+            easy=1
+            played=self.total_rounds
+            End(self.score, history,easy,played)
+            self.game_box.destroy()
+
+        # Else the quiz repeats and new questions are asked.
+        else:
+            self.top_left_answer_button.config(state=NORMAL)
+            self.top_right_answer_button.config(state=NORMAL)
+            self.bottom_left_answer_button.config(state=NORMAL)
+            self.bottom_right_answer_button.config(state=NORMAL)
+            self.next_button.config(state=DISABLED)
+            self.answer_box.config(text="")
+            self.hint_button.config(state=NORMAL)
+
+            # chooses four different countries / capitals from the list
+            question_ans = random.choice(capital_list)
+            if infinity == 0:
+                capital_list.remove(question_ans)
+            else:
+                pass
+            yes = random.choice(capital_list)
+            no = random.choice(capital_list)
+            ok = random.choice(capital_list)
+
+            # Defining variables for the capitals and countries,
+            # question is the capital in question
+            # self.answer is the correct answer
+            # incorrect[1,2,3] are the incorrect countries.
+            self.question = question_ans[1]
+            self.answer = question_ans[0]
+            self.hint = question_ans[2]
+            incorrect1 = yes[0]
+            incorrect2 = no[0]
+            incorrect3 = ok[0]
+
+
+            self.capital_label.config(text=self.question)
+
+            # I made the button_list a list so the list can be randomized so that the answer button locations is always
+            # different.
+            button_list = [self.answer, incorrect1, incorrect2, incorrect3]
+            random.shuffle(button_list)
+            self.top_left = button_list[0]
+            self.top_right = button_list[1]
+            self.bottom_left = button_list[2]
+            self.bottom_right = button_list[3]
+
+            # Defining the randomized list to their corresponding buttons
+            self.top_left_answer_button.config(text=self.top_left, command=lambda: self.reveal_answer(self.top_left))
+            self.top_right_answer_button.config(text=self.top_right, command=lambda: self.reveal_answer(self.top_right))
+            self.bottom_left_answer_button.config(text=self.bottom_left,
+                                                  command=lambda: self.reveal_answer(self.bottom_left))
+            self.bottom_right_answer_button.config(text=self.bottom_right,
+                                                   command=lambda: self.reveal_answer(self.bottom_right))
+
+    def to_hint(self):
+        get_hint = Hint(self)
+        get_hint.help_text.configure(text="this country is located in: {}".format(self.hint))
+
+    def to_end(self,history):
+        easy=1
+        End(self.score,history,easy,self.played)
+        self.game_box.destroy()
+
+
+class Hard:
+    def __init__(self,partner):
+
+        # Background color is light yellow
+        background = "#FFF4C3"
+
+        # Game History List
+        self.game_history = []
+
+        self.infinity = partner.infinity
+
+        # Import the csv file, name of csv file goes here...
+        with open('country-capitals.csv', 'r') as f:
+            # make csv file into list
+            file = csv.reader(f)
+            next(f)
+            my_list = list(file)
+
+        # choose an item from the main list, this item is itself a list
+        question_ans = random.choice(my_list)
+        if self.infinity == 0:
+            my_list.remove(question_ans)
+        else:
+            pass
+
+        # Initial Score
+        self.score = 0
+
+        # Amount of total rounds
+        self.total_rounds = partner.rounds
+
+        # Amounts of games played
+        self.played = 0
+
+        # first item in small list
+        self.question = question_ans[1]
+        self.answer = question_ans[0]
+        self.hint = question_ans[2]
+
+        # GUI Setup
+        self.game_box = Toplevel()
+        self.game_frame = Frame(self.game_box, bg=background)
+        self.game_frame.grid()
+        self.game_box.protocol('WM_DELETE_WINDOW', to_quit)
+
+        # Capital Label row 0
+        self.capital_label = Label(self.game_frame, text=self.question,
+                                   font="Helvetica 15 bold", bg=background)
+        self.capital_label.grid(row=0, padx=5, pady=10)
+
+        # Setup Answer Entry row 1
+        self.answer_entry = Entry(self.game_frame, font="Helvetica 15 bold")
+        self.answer_entry.grid(row=1, pady=10, padx=30)
+        self.answer_entry.focus()
+        self.answer_entry.bind('<Return>', lambda e: self.check_answer())
+
+        # Button frame for "guess" and "next" row 2
+        self.button_frame = Frame(self.game_frame, bg=background)
+        self.button_frame.grid(row=2)
+
+        # Button to prematurely end row 2.0 column 0
+        self.quit_button = Button(self.button_frame, text="End Game", font="Helvetica 10 bold",
+                                  command=lambda:self.to_end(self.game_history))
+        self.quit_button.grid(row=0,column=0,padx=5)
+
+        # Button to press when users have entered the country row 2.0 column 2
+        self.answer_button = Button(self.button_frame, text="Check Answer", font="Helvetica 10 bold",
+                                    command=lambda: self.check_answer())
+        self.answer_button.grid(row=0, column=2, padx=5)
+
+        # The hint button to get the hint for this country row 2 column 1
+        self.hint_button = Button(self.button_frame, text="Hint", command=self.to_hint, width=5,
+                                  font="Helvetica 10 bold")
+        self.hint_button.grid(row=0, column=1, padx=5)
+
+        # Button to go to the next question row 2.0 column 3
+        self.next_button = Button(self.button_frame, text="Next", font="Helvetica 10 bold",
+                                  command=lambda: self.next_question(my_list, self.game_history,self.infinity))
+        self.next_button.grid(row=0, column=3, padx=5)
+        self.next_button.config(state=DISABLED)
+        self.next_button.bind('<Return>', lambda e: self.next_question(my_list, self.game_history,self.infinity))
+
+        # Correct or incorrect Label row 3
+        self.answer_box = Label(self.game_frame, text="", font="Helvetica", bg=background, width=35, wrap=170)
+        self.answer_box.grid(row=3)
+
+        # Total amount of correct answers and games played row 4
+        self.points = Label(self.game_frame, text="{} correct / {} rounds played".format(self.score, self.played),
+                            font="Helvetica 10", bg=background)
+        self.points.grid(row=4)
+
+    def check_answer(self):
+        user_answer = self.answer_entry.get()
+        if user_answer == "":
+            self.answer_box.config(text="Please enter an answer",fg="#F62121")
+        else:
+            self.next_button.config(state=NORMAL)
+            self.answer_button.config(state=DISABLED)
+            self.next_button.focus()
+            self.played += 1
+            self.hint_button.config(state=DISABLED)
+            if user_answer.casefold() == self.answer.casefold():
+                self.answer_box.config(text="Correct!", fg="green")
+                self.score += 1
+                self.answer_entry.config(bg="#ACF392")
+
+                # History to be appended if correct
+                guess_history_correct = \
+                    "{}, the answer was {} \u2713".format(self.question,self.answer)
+                self.game_history.append(guess_history_correct)
+
+            else:
+                self.answer_box.config(text="this capital is located in {}".format(self.answer), fg="#F62121")
+                self.answer_entry.config(bg="#F39292")
+
+                # History to be appended if incorrect
+                guess_history_incorrect = \
+                    "{}, the answer was {} \u274c , you answered {}".format(self.question,self.answer,user_answer)
+                self.game_history.append(guess_history_incorrect)
+
+
+        self.points.config(text="{} correct / {} rounds played".format(self.score, self.played))
+
+    def next_question(self, capital_list, guesses,infinity):
+        # When the user has played 15 rounds we take them to the end gui.
+        if self.played == self.total_rounds:
+            hard=0
+            played=self.total_rounds
+            End(self.score, guesses,hard,played)
+            self.game_box.destroy()
+        # If they amount of played is not 15 new questions are generated.
+        else:
+            question_ans = random.choice(capital_list)
+            if infinity == 0:
+                capital_list.remove(question_ans)
+            else:
+                pass
+            self.question = question_ans[1]
+            self.answer = question_ans[0]
+            self.hint = question_ans[2]
+            self.capital_label.config(text=self.question)
+            self.answer_entry.delete(0, "end")
+            self.answer_box.config(text="")
+            self.next_button.config(state=DISABLED)
+            self.answer_button.config(state=NORMAL)
+            self.answer_entry.config(bg="white")
+            self.answer_entry.focus()
+            self.hint_button.config(state=NORMAL)
+
+    def to_hint(self):
+        get_hint = Hint(self)
+        get_hint.help_text.configure(text="this capital is located in: {}".format(self.hint))
+
+    def to_end(self,history):
+        easy=1
+        End(self.score,history,easy,self.played)
+        self.game_box.destroy()
+
+
+class Hint:
     def __init__(self, partner):
-        print("Program statsed")
+        background = "#FFF4C3"
 
-        # set Toplevel
+        # disable hint button
+        partner.hint_button.config(state=DISABLED)
 
-        self.stats_box = Toplevel()
+        # Sets up child window (ie: help box)
+        self.help_box = Toplevel()
 
-        # set up closing behaviour
+        # If users press 'x' cross at the top, closes hint and 'releases' hint button.
+        self.help_box.protocol('WM_DELETE_WINDOW', partial(self.close_help, partner))
 
-        self.stats_box.protocol('WM_DELETE_WINDOW', partial(self.dismiss, partner))
+        # Set up GUI Frame
+        self.help_frame = Frame(self.help_box, bg=background)
+        self.help_frame.grid()
 
-        # set up frame
+        # Set up Help heading (row 0)
+        self.how_heading = Label(self.help_frame, text="Help / Information",
+                                 font=("Helvetica", "24", "bold",),
+                                 bg=background)
+        self.how_heading.grid(row=0)
 
-        self.stats_frame = Frame(self.stats_box, padx=50, pady=5)
-        self.stats_frame.grid()
+        # Help text (label, row 1)
+        self.help_text = Label(self.help_frame, text="", font="helvetica",
+                               width=40, bg=background, wrap=200)
+        self.help_text.grid(row=1)
 
-        # header text
+        # Dismiss button (row 2)
+        self.dismiss_btn = Button(self.help_frame, text="Dismiss", width=10, bg="maroon", fg="white",
+                                  font="Helvetica" "10" "bold", command=partial(self.close_help, partner))
+        self.dismiss_btn.grid(row=2, pady=10)
 
-        self.stats_text = Label(self.stats_frame, text="Stats")
-        self.stats_text.grid(row=0)
+    def close_help(self, partner):
+        # Put help button back to normal...
+        partner.hint_button.config(state=NORMAL)
+        self.help_box.destroy()
 
-        # frame for buttons
 
-        self.export_quit_button_frame = Frame(self.stats_frame)
-        self.export_quit_button_frame.grid(row=1)
+class End:
+    def __init__(self, score, history,difficulty,played):
+        # Background color is light yellow
+        background = "#FFF4C3"
 
-        # export button
+        # Accuracy percentage
+        if played == 0:
+            percentage = 0
+        else:
+            percentage = (score/played) * 100
 
-        self.export_button = Button(self.export_quit_button_frame, text="Export",
-                                    command=lambda: self.open_export())
-        self.export_button.grid(row=1, column=0, padx=5)
+        # End Frame
+        self.end_box = Toplevel()
+        self.end_frame = Frame(self.end_box, bg=background)
+        self.end_frame.grid(row=0)
+        self.end_box.protocol('WM_DELETE_WINDOW', to_quit)
 
-        # quit button
+        # Heading row 0
+        self.end_heading = Label(self.end_frame, text="Thanks for playing!", font="Helvetica 25 bold", bg=background)
+        self.end_heading.grid(row=0, padx=10)
 
-        self.quit_button = Button(self.export_quit_button_frame, text="Dismiss",
-                                  command=partial(self.dismiss, partner))
-        self.quit_button.grid(row=1, column=1, padx=5)
+        # Game statistics row 1
+        self.end_stats = Label(self.end_frame, text="You managed to get \n {} \n right out of \n {} \n\n"
+                                                    "Accuracy percentage : {:.2f}%".format(score,played, percentage),
+                               bg=background, font="Helvetica 10")
+        self.end_stats.grid(row=1)
 
-    def open_export(self):
-        self.export_button.configure(state=DISABLED)
-        Export(self)
+        # Button grid row 2
+        # Three Different buttons.
+        # Export, Retry, Quit
+        self.end_buttons = Frame(self.end_frame, bg=background)
+        self.end_buttons.grid(row=2)
 
-    def dismiss(self, partner):
-        partner.stats_button.configure(state=NORMAL)
-        self.stats_box.destroy()
+        # Export button row 0 column 0
+        self.end_export_button = Button(self.end_buttons, text="Export", font="Helvetica 10 bold",
+                                        command=lambda: self.to_export(history,difficulty,score,percentage,played), width=10
+                                        , bg="#99CCFF", height=2)
+        self.end_export_button.grid(row=0, column=0, padx=6, pady=5)
+
+        # Retry Button row 0 column 1
+        self.end_retry_button = Button(self.end_buttons, text="Play Again!", font="Helvetica 10 bold",
+                                       command=self.to_start, width=10, bg="#FFFF99", height=2)
+        self.end_retry_button.grid(row=0, column=1, padx=6, pady=5)
+
+        # Quit button row 0 column 2
+        self.end_quit_button = Button(self.end_buttons, text="Quit", font="Helvetica 10 bold",
+                                      command=root.quit, width=10, bg="#FFBAB8", height=2)
+        self.end_quit_button.grid(row=0, column=2, padx=6, pady=5)
+
+    def to_start(self):
+        Start()
+        self.end_box.destroy()
+
+    def to_export(self, history,difficulty,score,percentage,played):
+        Export(self, history,difficulty,score,percentage,played)
 
 
 class Export:
-    def __init__(self, partner):
-        print("Program exported")
+    def __init__(self, partner, history,difficulty,score,percentage,played):
 
-        # set Toplevel
+        # Background Color is light yellow
+        background = "#FFF4C3"
 
+        # disable export button
+        partner.end_export_button.config(state=DISABLED)
+
+        # Sets up child window (ie: export box)
         self.export_box = Toplevel()
 
-        # set up closing behaviour
+        # If users press 'x' cross at the top, closes export and 'releases' export button.
+        self.export_box.protocol('WM_DELETE_WINDOW', partial(self.close_export, partner))
 
-        self.export_box.protocol('WM_DELETE_WINDOW', partial(self.dismiss, partner))
-
-        # set up frame
-
-        self.export_frame = Frame(self.export_box, padx=50, pady=5)
+        # Set up GUI Frame
+        self.export_frame = Frame(self.export_box, width=300, bg=background)
         self.export_frame.grid()
 
-        # header text
+        # Set up Export heading (row 0)
+        self.how_heading = Label(self.export_frame, text="Export / Instructions",
+                                 font="Arial 15 bold", bg=background)
+        self.how_heading.grid(row=0)
 
-        self.export_text = Label(self.export_frame, text="Export")
-        self.export_text.grid(row=0)
+        # Export text (label, row 1)
+        self.export_text = Label(self.export_frame, text="Enter a filename in the box below",
+                                 justify=LEFT, width=40, wrap=250, bg=background)
+        self.export_text.grid(row=1)
 
-        # frame for buttons
+        # Warning text (label, row2)
+        self.export_text = Label(self.export_frame, text="If the filename you entered already exists,"
+                                                         "it will be overwritten.", justify=LEFT,
+                                 fg='red', font="Arial 10 italic", bg=background,
+                                 wrap=225, padx=10, pady=10)
+        self.export_text.grid(row=2, pady=10)
 
-        self.warning_quit_button_frame = Frame(self.export_frame)
-        self.warning_quit_button_frame.grid(row=1)
+        # Filename Entry Box (row 3)
+        self.filename_entry = Entry(self.export_frame, width=20,
+                                    font="Arial 14 bold", justify=CENTER)
+        self.filename_entry.grid(row=3, pady=10)
 
-        # warning button
+        # Error Message Labels (initially blank, row 4)
+        self.save_error_label = Label(self.export_frame, text="", fg="maroon", bg=background
+                                      )
+        self.save_error_label.grid(row=4)
 
-        self.warning_button = Button(self.warning_quit_button_frame, text="Warning",
-                                     command=lambda: self.open_warning())
-        self.warning_button.grid(row=1, column=0, padx=5)
+        # Save / Cancel Frame (row 5)
+        self.save_cancel_frame = Frame(self.export_frame, bg=background)
+        self.save_cancel_frame.grid(row=5, pady=10)
 
-        # quit button
+        # Save and Cancel buttons (row 0 of save_cancel_frame)
+        self.save_button = Button(self.save_cancel_frame, text="Save", width=5,
+                                  command=partial(lambda: self.save_history(partner, history,difficulty,score,percentage,played)))
+        self.save_button.grid(row=0, column=0,padx=5,pady=5)
 
-        self.quit_button = Button(self.warning_quit_button_frame, text="Dismiss",
-                                  command=partial(self.dismiss, partner))
-        self.quit_button.grid(row=1, column=1, padx=5)
+        self.cancel_button = Button(self.save_cancel_frame, text="Cancel",width=5,
+                                    command=partial(self.close_export, partner))
+        self.cancel_button.grid(row=0, column=1,padx=5,pady=5)
 
-    def open_warning(self):
-        self.warning_button.configure(state=DISABLED)
-        Warning(self)
-
-    def dismiss(self, partner):
-        partner.export_button.configure(state=NORMAL)
+    def close_export(self, partner):
+        # Put export button back to normal...
+        partner.end_export_button.config(state=NORMAL)
         self.export_box.destroy()
 
+    def save_history(self, partner, history,difficulty,score,percentage,played):
+        global problem
 
-class Warning:
-    def __init__(self, partner):
-        print("Program warninged")
+        valid_char = "[A-Za-z0-9_]"
+        has_error = "no"
 
-        # set Toplevel
+        filename = self.filename_entry.get()
 
-        self.warning_box = Toplevel()
+        for letter in filename:
+            if re.match(valid_char, letter):
+                continue
 
-        # set up closing behaviour
+            elif letter == " ":
+                problem = " (no spaces allowed)"
 
-        self.warning_box.protocol('WM_DELETE_WINDOW', partial(self.dismiss, partner))
+            else:
+                problem = ("(no {}'s allowed)".format(letter))
+            has_error = "yes"
+            break
 
-        # set up frame
+        if filename == "":
+            problem = "can't be blank"
+            has_error = "yes"
 
-        self.warning_frame = Frame(self.warning_box, padx=50, pady=5)
-        self.warning_frame.grid()
+        if has_error == "yes":
+            self.save_error_label.config(text="Invalid filename - {}".format(problem))
 
-        # header text
+            self.filename_entry.config(bg="#ffafaf")
 
-        self.warning_text = Label(self.warning_frame, text="Warning")
-        self.warning_text.grid(row=0)
+        else:
+            filename = filename + ".txt"
 
-        # dismiss button
+            f = open(filename, "w+", encoding="utf-8")
 
-        self.quit_button = Button(self.warning_frame, text="Dismiss", command=partial(self.dismiss, partner))
-        self.quit_button.grid(row=1, padx=5)
+            if difficulty == 1:
+                f.write("You've played the Easy mode!\n\n")
+            else:
+                f.write("You've played the Hard mode!\n\n")
 
-    def dismiss(self, partner):
-        partner.warning_button.configure(state=NORMAL)
-        self.warning_box.destroy()
+            for item in history:
+                f.write(item + "\n")
+
+            f.write("\n\nGame Details\n\n"
+                    "You got {} out of {} correct\n\n"
+                    "Percentage Correct = {:.2f}% \n\n".format(score,played,percentage))
+            if percentage >= 90:
+                f.write("Fantastic Job!!")
+            elif percentage >= 80:
+                f.write("Great Effort")
+            elif percentage >= 60:
+                f.write("Good Try")
+            elif percentage >= 40:
+                f.write("Better luck next time")
+            elif percentage >= 20:
+                f.write("Could be better")
+            else:
+                f.write("What happened?")
+
+            f.close()
+
+            self.close_export(partner)
+
 
 # main routine
 if __name__ == "__main__":
     root = Tk()
-    root.title("Periodic Table Quiz")
+    root.withdraw()
+    root.title("Country Quiz")
     something = Start()
     root.mainloop()

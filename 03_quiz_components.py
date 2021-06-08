@@ -79,17 +79,17 @@ class Setup:
 
         # row 1
 
-        self.atomic_number_button = Button(self.answer_frame, text="Norse", width=10, height=2,
-                                          command=lambda: self.update_numbers(self.atomic_number_button, "top"))
-        self.atomic_number_button.grid(row=0, column=0, padx=5, pady=5)
+        self.norse_button = Button(self.answer_frame, text="Norse", width=10, height=2,
+                                          command=lambda: self.update_numbers(self.norse_button, "top"))
+        self.norse_button.grid(row=0, column=0, padx=5, pady=5)
 
-        self.mass_number_button = Button(self.answer_frame, text="Greek", width=10, height=2,
-                                          command=lambda: self.update_numbers(self.mass_number_button, "top"))
-        self.mass_number_button.grid(row=0, column=1, padx=5, pady=5)
+        self.greek_button = Button(self.answer_frame, text="Greek", width=10, height=2,
+                                          command=lambda: self.update_numbers(self.greek_button, "top"))
+        self.greek_button.grid(row=0, column=1, padx=5, pady=5)
 
-        self.name_button = Button(self.answer_frame, text="Egyptian", width=10, height=2,
-                                          command=lambda: self.update_numbers(self.name_button, "top"))
-        self.name_button.grid(row=0, column=2, padx=5, pady=5)
+        self.egyptian_button = Button(self.answer_frame, text="Egyptian", width=10, height=2,
+                                          command=lambda: self.update_numbers(self.egyptian_button, "top"))
+        self.egyptian_button.grid(row=0, column=2, padx=5, pady=5)
 
 
         #bottom buttons
@@ -123,28 +123,21 @@ class Setup:
 
     def update_numbers(self, option, category):
         if category == "top":
-            self.symbol_button.configure(state=NORMAL)
-            self.atomic_number_button.configure(state=NORMAL)
-            self.mass_number_button.configure(state=NORMAL)
-            self.name_button.configure(state=NORMAL)
-            self.group_button.configure(state=NORMAL)
-            self.period_button.configure(state=NORMAL)
+            self.norse_button.configure(state=NORMAL)
+            self.greek_button.configure(state=NORMAL)
+            self.egyptian_button.configure(state=NORMAL)
             self.answer_option = option.cget('text').replace("\n", " ")
         else:
-            self.symbol_button_given.configure(state=NORMAL)
-            self.atomic_number_button_given.configure(state=NORMAL)
-            self.mass_number_button_given.configure(state=NORMAL)
-            self.name_button_given.configure(state=NORMAL)
+            self.norse_button.configure(state=NORMAL)
+            self.greek_button.configure(state=NORMAL)
+            self.egyptian_button.configure(state=NORMAL)
             self.given_option = option.cget('text').replace("\n", " ")
-        if self.answer_option != "" and self.given_option != "":
-            self.play_button.configure(state=NORMAL)
 
         option.config(state=DISABLED)
 
 
 class Play:
     def __init__(self, partner):
-        print("Program played")
 
         # set Toplevel
 
