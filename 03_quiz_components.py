@@ -7,37 +7,36 @@ import csv
 
 class Start:
     def __init__(self):
-        background = "#FFF4C3"
         self.rounds = 0
 
         #set toplevel (GUI)
         self.start_box = Toplevel()
-        self.start_frame = Frame(self.start_box,padx=10, pady=10, bg=background)
+        self.start_frame = Frame(self.start_box,padx=10, pady=10)
         self.start_frame.grid()
 
         # deity header text
 
-        self.setup_text = Label(self.start_frame, text="Legendary Figures Quiz", font=("Arial", "16", "bold"), bg=background)
+        self.setup_text = Label(self.start_frame, text="Legendary Figures Quiz", font=("Arial", "16", "bold"))
         self.setup_text.grid(row=0, pady=5)
 
         # instruction text
 
         self.instructions_text = Label(self.start_frame, text="Please select the culture you wanna play \n",
-                                       font=("Arial", "9"), bg=background)
+                                       font=("Arial", "9"))
         self.instructions_text.grid(row=1, pady=5)
 
         # Round warning text row 2
 
         self.round_warning = Label(self.start_frame, text="If left blank there will be infinity rounds",
-                                   font="Helvetica 9 italic", fg="red", bg=background)
+                                   font="Helvetica 9 italic", fg="red")
         self.round_warning.grid(row=2, column=0)
 
         # Frame for rounds row 3
-        self.round_frame = Frame(self.start_frame, bg=background)
+        self.round_frame = Frame(self.start_frame)
         self.round_frame.grid(row=3)
 
         # Round Label row 0.0
-        self.round_label = Label(self.round_frame, text="Rounds:", bg=background, font="helvetica 15")
+        self.round_label = Label(self.round_frame, text="Rounds:", font="helvetica 15")
         self.round_label.grid(row=0, column=0)
 
         # Round Entry row 0.1
@@ -46,31 +45,28 @@ class Start:
         self.round_entry.grid(row=0, column=1, padx=5, pady=5)
 
         # to_game button frame row 4
-        self.to_game_frame = Frame(self.start_frame, bg=background)
+        self.to_game_frame = Frame(self.start_frame)
         self.to_game_frame.grid(row=4)
 
         # Button Font
         button_font = "Arial 15 bold"
 
         # to_egyptian buttons row 4.0
-        self.easy_button = Button(self.to_game_frame, text="Egytian", font=button_font,
+        self.egyptian_button = Button(self.to_game_frame, text="Egyptian", font=button_font,
                                   command=self.to_egyptian, height=2, width=13, borderwidth=2,relief="raised")
-        self.easy_button.grid(row=0, column=0, padx=10, pady=5)
+        self.egyptian_button.grid(row=0, column=0, padx=10, pady=5)
 
         # to_greek buttons row 4.1
-        self.hard_button = Button(self.to_game_frame, text="Greek", font=button_font,
+        self.greek_button = Button(self.to_game_frame, text="Greek", font=button_font,
                                   command=self.to_greek, height=2, width=13, borderwidth=2,relief="raised")
-        self.hard_button.grid(row=0, column=1, padx=10, pady=5)
+        self.greek_button.grid(row=0, column=1, padx=10, pady=5)
 
         # to_norse buttons row 4.1
-        self.hard_button = Button(self.to_game_frame, text="Norse", font=button_font,
+        self.norse_button = Button(self.to_game_frame, text="Norse", font=button_font,
                                   command=self.to_norse, height=2, width=13, borderwidth=2, relief="raised")
-        self.hard_button.grid(row=0, column=1, padx=10, pady=5)
+        self.norse_button.grid(row=0, column=2, padx=10, pady=5)
 
-        # Help Button row 5
-        self.help_button = Button(self.start_frame, text="Help", font="Helvetica 10 bold", height=2, width=10,
-                                  borderwidth=3, command=self.help)
-        self.help_button.grid(row=5, pady=5)
+
 
     def to_greek (self):
         self.rounds=self.round_entry.get()
@@ -805,7 +801,7 @@ class Egypt:
         self.next_button.grid(row=0, column=2, padx=5, pady=8)
         # Disable the next button initially,
         self.next_button.config(state=DISABLED)
-    def reveal_answer(self, location):
+    def show_answer(self, location):
 
         # Disable all the buttons
         self.top_left_answer_button.config(state=DISABLED)
@@ -884,59 +880,19 @@ class Egypt:
             self.bottom_right = button_list[3]
 
             # Defining the randomized list to their corresponding buttons
-            self.top_left_answer_button.config(text=self.top_left, command=lambda: self.reveal_answer(self.top_left))
-            self.top_right_answer_button.config(text=self.top_right, command=lambda: self.reveal_answer(self.top_right))
+            self.top_left_answer_button.config(text=self.top_left, command=lambda: self.show_answer(self.top_left))
+            self.top_right_answer_button.config(text=self.top_right, command=lambda: self.show_answer(self.top_right))
             self.bottom_left_answer_button.config(text=self.bottom_left,
-                                                  command=lambda: self.reveal_answer(self.bottom_left))
+                                                  command=lambda: self.show_answer(self.bottom_left))
             self.bottom_right_answer_button.config(text=self.bottom_right,
-                                                   command=lambda: self.reveal_answer(self.bottom_right))
+                                                   command=lambda: self.show_answer(self.bottom_right))
 
-    def to_hint(self):
-        get_hint = Hint(self)
-        get_hint.help_text.configure(text="this country is located in: {}".format(self.hint))
 
     def to_end(self,history):
         easy=1
         End(self.score,history,easy,self.played)
         self.game_box.destroy()
 
-class Hint:
-    def __init__(self, partner):
-        background = "#FFF4C3"
-
-        # disable hint button
-        partner.hint_button.config(state=DISABLED)
-
-        # Sets up child window (ie: help box)
-        self.help_box = Toplevel()
-
-        # If users press 'x' cross at the top, closes hint and 'releases' hint button.
-        self.help_box.protocol('WM_DELETE_WINDOW', partial(self.close_help, partner))
-
-        # Set up GUI Frame
-        self.help_frame = Frame(self.help_box, bg=background)
-        self.help_frame.grid()
-
-        # Set up Help heading (row 0)
-        self.how_heading = Label(self.help_frame, text="Help / Information",
-                                 font=("Helvetica", "24", "bold",),
-                                 bg=background)
-        self.how_heading.grid(row=0)
-
-        # Help text (label, row 1)
-        self.help_text = Label(self.help_frame, text="", font="helvetica",
-                               width=40, bg=background, wrap=200)
-        self.help_text.grid(row=1)
-
-        # Dismiss button (row 2)
-        self.dismiss_btn = Button(self.help_frame, text="Dismiss", width=10, bg="maroon", fg="white",
-                                  font="Helvetica" "10" "bold", command=partial(self.close_help, partner))
-        self.dismiss_btn.grid(row=2, pady=10)
-
-    def close_help(self, partner):
-        # Put help button back to normal...
-        partner.hint_button.config(state=NORMAL)
-        self.help_box.destroy()
 
 class End:
     def __init__(self, score, history, difficulty, played):
@@ -1100,7 +1056,7 @@ class Export:
             if difficulty == 1:
                 f.write("You've played the Greek culture!\n\n")
             else:
-                f.write("You've played the Hard mode!\n\n")
+                f.write("You've played the  \n\n")
 
             for item in history:
                 f.write(item + "\n")
@@ -1132,3 +1088,7 @@ if __name__ == "__main__":
     root.title("Legendary Figures Quiz")
     something = Start()
     root.mainloop()
+
+
+
+# This is Amos's code
