@@ -789,10 +789,6 @@ class Egypt:
                                   font="Helvetica 10 bold")
         self.quit_button.grid(row=0, column=0, padx=5, pady=8)
 
-        # The hint button to get the hint for this country row 0 column 1
-        self.hint_button = Button(self.button_frame, text="Hint", command=self.to_hint, width=10,
-                                  font="Helvetica 10 bold")
-        self.hint_button.grid(row=0, column=1, padx=5, pady=8)
 
         # The Next button to proceed to the next round row 0 column 2
         self.next_button = Button(self.button_frame, text="Next",
@@ -808,7 +804,6 @@ class Egypt:
         self.top_right_answer_button.config(state=DISABLED)
         self.bottom_left_answer_button.config(state=DISABLED)
         self.bottom_right_answer_button.config(state=DISABLED)
-        self.hint_button.config(state=DISABLED)
 
         # Enable the next_button
         self.next_button.config(state=NORMAL)
