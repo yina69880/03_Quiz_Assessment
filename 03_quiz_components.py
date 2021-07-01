@@ -28,7 +28,7 @@ class Start:
 
         # Round warning text row 2
 
-        self.round_warning = Label(self.start_frame, text="If left blank there will be infinity rounds",
+        self.round_warning = Label(self.start_frame, text="If no rounds are entered, there will be endless rounds",
                                    font="Helvetica 9 italic", fg="red")
         self.round_warning.grid(row=2, column=0)
 
@@ -351,7 +351,7 @@ class Greek:
 
         # The Next button to proceed to the next round row 0 column 2
         self.next_button = Button(self.button_frame, text="Next",
-                                  command=lambda: self.to_next(my_list, self.game_history, self.infinity), width=10,
+                                  command=lambda: self.to_next(my_list), width=10,
                                   font="Helvetica 10 bold")
         self.next_button.grid(row=0, column=2, padx=5, pady=8)
         # Disable the next button initially,
@@ -385,16 +385,7 @@ class Greek:
         # Update the score that the user has
         self.score_label.config(text="{} correct / {} rounds played".format(self.score, self.played))
 
-    def to_next(self, greek_list, history,infinity):
-        # if the amount of rounds played is 15 the player is taken to the end screen
-        if self.played == self.total_rounds:
-            easy=1
-            played=self.total_rounds
-            End(self.score, history,easy,played)
-            self.game_box.destroy()
-
-        # Else the quiz repeats and new questions are asked.
-        else:
+    def to_next(self, greek_list):
             self.top_left_answer_button.config(state=NORMAL)
             self.top_right_answer_button.config(state=NORMAL)
             self.bottom_left_answer_button.config(state=NORMAL)
@@ -403,10 +394,6 @@ class Greek:
             self.answer_box.config(text="")
             # chooses four different countries / capitals from the list
             question_ans = random.choice(greek_list)
-            if infinity == 0:
-                greek_list.remove(question_ans)
-            else:
-                pass
             yes = random.choice(greek_list)
             no = random.choice(greek_list)
             ok = random.choice(greek_list)
@@ -419,6 +406,8 @@ class Greek:
             incorrect2 = no[0]
             incorrect3 = ok[0]
             print(question_ans)
+
+            self.deity_label.config(text=self.question)
 
             # I made the button_list a list so the list can be randomized so that the answer button locations is always different.
             button_list = [self.answer, incorrect1, incorrect2, incorrect3]
@@ -554,7 +543,7 @@ class Norse:
 
         # The Next button to proceed to the next round row 0 column 2
         self.next_button = Button(self.button_frame, text="Next",
-                                  command=lambda: self.to_next(my_list, self.game_history, self.infinity), width=10,
+                                  command=lambda: self.to_next(my_list), width=10,
                                   font="Helvetica 10 bold")
         self.next_button.grid(row=0, column=2, padx=5, pady=8)
         # Disable the next button initially,
@@ -589,65 +578,45 @@ class Norse:
         # Update the score that the user has
         self.score_label.config(text="{} correct / {} rounds played".format(self.score, self.played))
 
-    def to_next(self, norse_list, history, infinity):
-        # if the amount of rounds played is 15 the player is taken to the end screen
-        if self.played == self.total_rounds:
-            easy = 1
-            played = self.total_rounds
-            End(self.score, history, easy, played)
-            self.game_box.destroy()
+    def to_next(self, norse_list):
+        self.top_left_answer_button.config(state=NORMAL)
+        self.top_right_answer_button.config(state=NORMAL)
+        self.bottom_left_answer_button.config(state=NORMAL)
+        self.bottom_right_answer_button.config(state=NORMAL)
+        self.next_button.config(state=DISABLED)
+        self.answer_box.config(text="")
+        # chooses four different countries / capitals from the list
+        question_ans = random.choice(norse_list)
+        yes = random.choice(norse_list)
+        no = random.choice(norse_list)
+        ok = random.choice(norse_list)
 
-        # Else the quiz repeats and new questions are asked.
-        else:
-            self.top_left_answer_button.config(state=NORMAL)
-            self.top_right_answer_button.config(state=NORMAL)
-            self.bottom_left_answer_button.config(state=NORMAL)
-            self.bottom_right_answer_button.config(state=NORMAL)
-            self.next_button.config(state=DISABLED)
-            self.answer_box.config(text="")
+        # incorrect[1,2,3] are the incorrect countries.
+        self.question = question_ans[1]
+        self.answer = question_ans[0]
+        # self.hint = question_ans[2]
+        incorrect1 = yes[0]
+        incorrect2 = no[0]
+        incorrect3 = ok[0]
+        print(question_ans)
 
-            # chooses four different countries / capitals from the list
-            question_ans = random.choice(norse_list)
-            if infinity == 0:
-                norse_list.remove(question_ans)
-            else:
-                pass
-            yes = random.choice(norse_list)
-            no = random.choice(norse_list)
-            ok = random.choice(norse_list)
+        self.deity_label.config(text=self.question)
 
-            # Defining variables for the capitals and countries,
-            # question is the capital in question
-            # self.answer is the correct answer
-            # incorrect[1,2,3] are the incorrect countries.
-            self.question = question_ans[1]
-            self.answer = question_ans[0]
-            self.hint = question_ans[2]
-            incorrect1 = yes[0]
-            incorrect2 = no[0]
-            incorrect3 = ok[0]
-            print(question_ans)
+        # I made the button_list a list so the list can be randomized so that the answer button locations is always different.
+        button_list = [self.answer, incorrect1, incorrect2, incorrect3]
+        random.shuffle(button_list)
+        self.top_left = button_list[0]
+        self.top_right = button_list[1]
+        self.bottom_left = button_list[2]
+        self.bottom_right = button_list[3]
 
-            # I made the button_list a list so the list can be randomized so that the answer button locations is always
-            # different.
-            button_list = [self.answer, incorrect1, incorrect2, incorrect3]
-            random.shuffle(button_list)
-            self.top_left = button_list[0]
-            self.top_right = button_list[1]
-            self.bottom_left = button_list[2]
-            self.bottom_right = button_list[3]
-
-            # Defining the randomized list to their corresponding buttons
-            self.top_left_answer_button.config(text=self.top_left,
-                                               command=lambda: self.show_answer(self.top_left))
-            self.top_right_answer_button.config(text=self.top_right,
-                                                command=lambda: self.show_answer(self.top_right))
-            self.bottom_left_answer_button.config(text=self.bottom_left,
-                                                  command=lambda: self.show_answer(self.bottom_left))
-            self.bottom_right_answer_button.config(text=self.bottom_right,
-                                                   command=lambda: self.show_answer(self.bottom_right))
-
-
+        # Defining the randomized list to their corresponding buttons
+        self.top_left_answer_button.config(text=self.top_left, command=lambda: self.show_answer(self.top_left))
+        self.top_right_answer_button.config(text=self.top_right, command=lambda: self.show_answer(self.top_right))
+        self.bottom_left_answer_button.config(text=self.bottom_left,
+                                              command=lambda: self.show_answer(self.bottom_left))
+        self.bottom_right_answer_button.config(text=self.bottom_right,
+                                               command=lambda: self.show_answer(self.bottom_right))
     def to_end(self, history):
         easy = 1
         End(self.score, history, easy, self.played)
@@ -764,7 +733,7 @@ class Egypt:
 
         # The Next button to proceed to the next round row 0 column 2
         self.next_button = Button(self.button_frame, text="Next",
-                                  command=lambda: self.to_next(my_list, self.game_history, self.infinity), width=10,
+                                  command=lambda: self.to_next(my_list), width=10,
                                   font="Helvetica 10 bold")
         self.next_button.grid(row=0, column=2, padx=5, pady=8)
         # Disable the next button initially,
@@ -798,61 +767,45 @@ class Egypt:
         # Update the score that the user has
         self.score_label.config(text="{} correct / {} rounds played".format(self.score, self.played))
 
-    def to_next(self, greek_list, history,infinity):
-        # if the amount of rounds played is 15 the player is taken to the end screen
-        if self.played == self.total_rounds:
-            easy=1
-            played=self.total_rounds
-            End(self.score, history,easy,played)
-            self.game_box.destroy()
+    def to_next(self, Egyptian_list):
+        self.top_left_answer_button.config(state=NORMAL)
+        self.top_right_answer_button.config(state=NORMAL)
+        self.bottom_left_answer_button.config(state=NORMAL)
+        self.bottom_right_answer_button.config(state=NORMAL)
+        self.next_button.config(state=DISABLED)
+        self.answer_box.config(text="")
+        # chooses four different countries / capitals from the list
+        question_ans = random.choice(Egyptian_list)
+        yes = random.choice(Egyptian_list)
+        no = random.choice(Egyptian_list)
+        ok = random.choice(Egyptian_list)
 
-        # Else the quiz repeats and new questions are asked.
-        else:
-            self.top_left_answer_button.config(state=NORMAL)
-            self.top_right_answer_button.config(state=NORMAL)
-            self.bottom_left_answer_button.config(state=NORMAL)
-            self.bottom_right_answer_button.config(state=NORMAL)
-            self.next_button.config(state=DISABLED)
-            self.answer_box.config(text="")
+        # incorrect[1,2,3] are the incorrect countries.
+        self.question = question_ans[1]
+        self.answer = question_ans[0]
+        # self.hint = question_ans[2]
+        incorrect1 = yes[0]
+        incorrect2 = no[0]
+        incorrect3 = ok[0]
+        print(question_ans)
 
-            # chooses four different countries / capitals from the list
-            question_ans = random.choice(greek_list)
-            if infinity == 0:
-                greek_list.remove(question_ans)
-            else:
-                pass
-            yes = random.choice(greek_list)
-            no = random.choice(greek_list)
-            ok = random.choice(greek_list)
+        self.deity_label.config(text=self.question)
 
-            # Defining variables for the capitals and countries,
-            # question is the capital in question
-            # self.answer is the correct answer
-            # incorrect[1,2,3] are the incorrect countries.
-            self.question = question_ans[1]
-            self.answer = question_ans[0]
-            # self.hint = question_ans[2]
-            incorrect1 = yes[0]
-            incorrect2 = no[0]
-            incorrect3 = ok[0]
-            print(question_ans)
+        # I made the button_list a list so the list can be randomized so that the answer button locations is always different.
+        button_list = [self.answer, incorrect1, incorrect2, incorrect3]
+        random.shuffle(button_list)
+        self.top_left = button_list[0]
+        self.top_right = button_list[1]
+        self.bottom_left = button_list[2]
+        self.bottom_right = button_list[3]
 
-            # I made the button_list a list so the list can be randomized so that the answer button locations is always
-            # different.
-            button_list = [self.answer, incorrect1, incorrect2, incorrect3]
-            random.shuffle(button_list)
-            self.top_left = button_list[0]
-            self.top_right = button_list[1]
-            self.bottom_left = button_list[2]
-            self.bottom_right = button_list[3]
-
-            # Defining the randomized list to their corresponding buttons
-            self.top_left_answer_button.config(text=self.top_left, command=lambda: self.show_answer(self.top_left))
-            self.top_right_answer_button.config(text=self.top_right, command=lambda: self.show_answer(self.top_right))
-            self.bottom_left_answer_button.config(text=self.bottom_left,
-                                                  command=lambda: self.show_answer(self.bottom_left))
-            self.bottom_right_answer_button.config(text=self.bottom_right,
-                                                   command=lambda: self.show_answer(self.bottom_right))
+        # Defining the randomized list to their corresponding buttons
+        self.top_left_answer_button.config(text=self.top_left, command=lambda: self.show_answer(self.top_left))
+        self.top_right_answer_button.config(text=self.top_right, command=lambda: self.show_answer(self.top_right))
+        self.bottom_left_answer_button.config(text=self.bottom_left,
+                                              command=lambda: self.show_answer(self.bottom_left))
+        self.bottom_right_answer_button.config(text=self.bottom_right,
+                                               command=lambda: self.show_answer(self.bottom_right))
 
 
     def to_end(self,history):
