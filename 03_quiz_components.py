@@ -5,13 +5,14 @@ import csv
 
 
 
+
 class Start:
     def __init__(self):
         self.rounds = 0
 
         #set toplevel (GUI)
-        self.start_box = Toplevel()
-        self.start_frame = Frame(self.start_box,padx=10, pady=10)
+        # self./// = Toplevel()
+        self.start_frame = Frame(padx=10, pady=10)
         self.start_frame.grid()
 
         # deity header text
@@ -74,14 +75,12 @@ class Start:
             self.rounds = int(999999999)
             self.infinity = 1
             Greek(self)
-            self.start_box.destroy()
         else:
             try:
                 self.rounds = int(self.rounds)
                 self.infinity = 0
                 if self.rounds >= 1:
                         Greek(self)
-                        self.start_box.destroy()
                 else:
                     self.round_warning.config(bg="red", text="Please enter a number or remain blank", fg="#FFFFFF")
                     self.round_entry.delete(0, "end")
@@ -95,14 +94,12 @@ class Start:
             self.rounds = int(999999999)
             self.infinity = 1
             Norse(self)
-            self.start_box.destroy()
         else:
             try:
                 self.rounds = int(self.rounds)
                 self.infinity = 0
                 if self.rounds >= 1:
                         Norse(self)
-                        self.start_box.destroy()
                 else:
                     self.round_warning.config(bg="red", text="Please enter a number or remain blank", fg="#FFFFFF")
                     self.round_entry.delete(0, "end")
@@ -116,14 +113,12 @@ class Start:
             self.rounds = int(999999999)
             self.infinity = 1
             Egypt(self)
-            self.start_box.destroy()
         else:
             try:
                 self.rounds = int(self.rounds)
                 self.infinity = 0
                 if self.rounds >= 1:
                         Egypt(self)
-                        self.start_box.destroy()
                 else:
                     self.round_warning.config(bg="red", text="Please enter a number or remain blank", fg="#FFFFFF")
                     self.round_entry.delete(0, "end")
@@ -177,7 +172,7 @@ class Start:
 
     def open_play(self):
         Play(self)
-        self.start_box.withdraw()
+
 
     # update_numbers enables all buttons in category and then disables selected button,
     # updates selected option variables
@@ -195,7 +190,6 @@ class Start:
             self.given_option = option.cget('text').replace("\n", " ")
 
         option.config(state=DISABLED)
-
 
 class Play:
     def __init__(self, partner):
@@ -242,6 +236,7 @@ class Play:
 
         self.quit_button = Button(self.play_frame, text="Quit", command=partial(root.destroy))
         self.quit_button.grid(row=3)
+
 def to_quit():
     root.destroy()
 
@@ -353,10 +348,6 @@ class Greek:
                                   font="Helvetica 10 bold")
         self.quit_button.grid(row=0, column=0, padx=5, pady=8)
 
-        # The hint button to get the hint for this country row 0 column 1
-        self.hint_button = Button(self.button_frame, text="Hint", command=self.to_hint, width=10,
-                                  font="Helvetica 10 bold")
-        self.hint_button.grid(row=0, column=1, padx=5, pady=8)
 
         # The Next button to proceed to the next round row 0 column 2
         self.next_button = Button(self.button_frame, text="Next",
@@ -373,7 +364,6 @@ class Greek:
         self.top_right_answer_button.config(state=DISABLED)
         self.bottom_left_answer_button.config(state=DISABLED)
         self.bottom_right_answer_button.config(state=DISABLED)
-        self.hint_button.config(state=DISABLED)
 
         # Enable the next_button
         self.next_button.config(state=NORMAL)
@@ -411,8 +401,6 @@ class Greek:
             self.bottom_right_answer_button.config(state=NORMAL)
             self.next_button.config(state=DISABLED)
             self.answer_box.config(text="")
-            self.hint_button.config(state=NORMAL)
-
             # chooses four different countries / capitals from the list
             question_ans = random.choice(greek_list)
             if infinity == 0:
@@ -423,20 +411,16 @@ class Greek:
             no = random.choice(greek_list)
             ok = random.choice(greek_list)
 
-            # Defining variables for the capitals and countries,
-            # question is the capital in question
-            # self.answer is the correct answer
             # incorrect[1,2,3] are the incorrect countries.
             self.question = question_ans[1]
             self.answer = question_ans[0]
-            self.hint = question_ans[2]
+            # self.hint = question_ans[2]
             incorrect1 = yes[0]
             incorrect2 = no[0]
             incorrect3 = ok[0]
             print(question_ans)
 
-            # I made the button_list a list so the list can be randomized so that the answer button locations is always
-            # different.
+            # I made the button_list a list so the list can be randomized so that the answer button locations is always different.
             button_list = [self.answer, incorrect1, incorrect2, incorrect3]
             random.shuffle(button_list)
             self.top_left = button_list[0]
@@ -444,17 +428,15 @@ class Greek:
             self.bottom_left = button_list[2]
             self.bottom_right = button_list[3]
 
-            # Defining the randomized list to their corresponding buttons
-            self.top_left_answer_button.config(text=self.top_left, command=lambda: self.reveal_answer(self.top_left))
-            self.top_right_answer_button.config(text=self.top_right, command=lambda: self.reveal_answer(self.top_right))
-            self.bottom_left_answer_button.config(text=self.bottom_left,
-                                                  command=lambda: self.reveal_answer(self.bottom_left))
-            self.bottom_right_answer_button.config(text=self.bottom_right,
-                                                   command=lambda: self.reveal_answer(self.bottom_right))
 
-    def to_hint(self):
-        get_hint = Hint(self)
-        get_hint.help_text.configure(text="this country is located in: {}".format(self.hint))
+
+            # Defining the randomized list to their corresponding buttons
+            self.top_left_answer_button.config(text=self.top_left, command=lambda: self.show_answer(self.top_left))
+            self.top_right_answer_button.config(text=self.top_right, command=lambda: self.show_answer(self.top_right))
+            self.bottom_left_answer_button.config(text=self.bottom_left,
+                                                  command=lambda: self.show_answer(self.bottom_left))
+            self.bottom_right_answer_button.config(text=self.bottom_right,
+                                                   command=lambda: self.show_answer(self.bottom_right))
 
     def to_end(self,history):
         easy=1
@@ -570,11 +552,6 @@ class Norse:
                                   font="Helvetica 10 bold")
         self.quit_button.grid(row=0, column=0, padx=5, pady=8)
 
-        # The hint button to get the hint for this country row 0 column 1
-        self.hint_button = Button(self.button_frame, text="Hint", command=self.to_hint, width=10,
-                                  font="Helvetica 10 bold")
-        self.hint_button.grid(row=0, column=1, padx=5, pady=8)
-
         # The Next button to proceed to the next round row 0 column 2
         self.next_button = Button(self.button_frame, text="Next",
                                   command=lambda: self.to_next(my_list, self.game_history, self.infinity), width=10,
@@ -590,7 +567,6 @@ class Norse:
         self.top_right_answer_button.config(state=DISABLED)
         self.bottom_left_answer_button.config(state=DISABLED)
         self.bottom_right_answer_button.config(state=DISABLED)
-        self.hint_button.config(state=DISABLED)
 
         # Enable the next_button
         self.next_button.config(state=NORMAL)
@@ -629,7 +605,6 @@ class Norse:
             self.bottom_right_answer_button.config(state=NORMAL)
             self.next_button.config(state=DISABLED)
             self.answer_box.config(text="")
-            self.hint_button.config(state=NORMAL)
 
             # chooses four different countries / capitals from the list
             question_ans = random.choice(norse_list)
@@ -672,9 +647,6 @@ class Norse:
             self.bottom_right_answer_button.config(text=self.bottom_right,
                                                    command=lambda: self.show_answer(self.bottom_right))
 
-    def to_hint(self):
-        get_hint = Hint(self)
-        get_hint.help_text.configure(text="this country is located in: {}".format(self.hint))
 
     def to_end(self, history):
         easy = 1
@@ -797,6 +769,7 @@ class Egypt:
         self.next_button.grid(row=0, column=2, padx=5, pady=8)
         # Disable the next button initially,
         self.next_button.config(state=DISABLED)
+
     def show_answer(self, location):
 
         # Disable all the buttons
@@ -841,7 +814,6 @@ class Egypt:
             self.bottom_right_answer_button.config(state=NORMAL)
             self.next_button.config(state=DISABLED)
             self.answer_box.config(text="")
-            self.hint_button.config(state=NORMAL)
 
             # chooses four different countries / capitals from the list
             question_ans = random.choice(greek_list)
@@ -859,7 +831,7 @@ class Egypt:
             # incorrect[1,2,3] are the incorrect countries.
             self.question = question_ans[1]
             self.answer = question_ans[0]
-            self.hint = question_ans[2]
+            # self.hint = question_ans[2]
             incorrect1 = yes[0]
             incorrect2 = no[0]
             incorrect3 = ok[0]
@@ -888,17 +860,18 @@ class Egypt:
         End(self.score,history,easy,self.played)
         self.game_box.destroy()
 
-
 class End:
     def __init__(self, score, history, difficulty, played):
-        # Background color is light yellow
-        background = "#FFF4C3"
+        # Background color is pale orange
+        background = "#ffdfbf"
 
-        # Accuracy percentage
+
+        # Percentage
         if played == 0:
             percentage = 0
         else:
             percentage = (score / played) * 100
+
 
         # End Frame
         self.end_box = Toplevel()
@@ -913,8 +886,7 @@ class End:
 
         # Game statistics row 1
         self.end_stats = Label(self.end_frame, text="You managed to get \n {} \n right out of \n {} \n\n"
-                                                    "Accuracy percentage : {:.2f}%".format(score, played,
-                                                                                           percentage),
+                                                    "Accuracy percentage : {:.2f}%".format(score, played, percentage),
                                bg=background, font="Helvetica 10")
         self.end_stats.grid(row=1)
 
@@ -928,17 +900,17 @@ class End:
         self.end_export_button = Button(self.end_buttons, text="Export", font="Helvetica 10 bold",
                                         command=lambda: self.to_export(history, difficulty, score, percentage,
                                                                        played), width=10
-                                        , bg="#99CCFF", height=2)
+                                        , bg="#abd7eb", height=2)
         self.end_export_button.grid(row=0, column=0, padx=6, pady=5)
 
         # Retry Button row 0 column 1
         self.end_retry_button = Button(self.end_buttons, text="Play Again!", font="Helvetica 10 bold",
-                                       command=self.to_start, width=10, bg="#FFFF99", height=2)
+                                       command=self.to_start, width=10, bg="#EEEE9B", height=2)
         self.end_retry_button.grid(row=0, column=1, padx=6, pady=5)
 
         # Quit button row 0 column 2
         self.end_quit_button = Button(self.end_buttons, text="Quit", font="Helvetica 10 bold",
-                                      command=root.quit, width=10, bg="#FFBAB8", height=2)
+                                      command=root.quit, width=10, bg="#F47174", height=2)
         self.end_quit_button.grid(row=0, column=2, padx=6, pady=5)
 
     def to_start(self):
@@ -951,7 +923,7 @@ class End:
 class Export:
     def __init__(self, partner, history, difficulty, score, percentage, played):
 
-        # Background Color is light yellow
+        # Background Color is pale yellow
         background = "#FFF4C3"
 
         # disable export button
@@ -1083,6 +1055,115 @@ if __name__ == "__main__":
     root.title("Legendary Figures Quiz")
     something = Start()
     root.mainloop()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
