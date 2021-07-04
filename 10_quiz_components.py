@@ -28,7 +28,7 @@ class Start:
 
         # Round warning text row 2
 
-        self.round_warning = Label(self.start_frame, text="If no rounds are entered, there will be endless rounds",
+        self.round_warning = Label(self.start_frame, text=" If left blank, There will be endless rounds",
                                    font="Helvetica 9 italic", fg="red")
         self.round_warning.grid(row=2, column=0)
 
@@ -174,8 +174,7 @@ class Start:
         Play(self)
 
 
-    # update_numbers enables all buttons in category and then disables selected button,
-    # updates selected option variables
+
 
     def update_numbers(self, option, category):
         if category == "top":
@@ -298,7 +297,7 @@ class Greek:
         self.deity_label.grid(row=0)
 
         # Label showing correct or incorrect row 1
-        self.answer_box = Label(self.game_frame, text="", font="Helvetica 12 italic", width=35, wrap=300)
+        self.answer_box = Label(self.game_frame, text="", font="Helvetica 12 italic", width=35, wrap=300, bg=background)
         self.answer_box.grid(row=1)
 
         # Setup grid for answer buttons row 2
@@ -338,7 +337,7 @@ class Greek:
                                  bg=background)
         self.score_label.grid(row=3)
 
-        # Button frames for next, quit and hint button row 4
+        # Button frames for next, quit row 4
         self.button_frame = Frame(self.game_box, bg=background)
         self.button_frame.grid(row=4)
 
@@ -392,13 +391,13 @@ class Greek:
             self.bottom_right_answer_button.config(state=NORMAL)
             self.next_button.config(state=DISABLED)
             self.answer_box.config(text="")
-            # chooses four different countries / capitals from the list
+            # chooses four different deities from the list
             question_ans = random.choice(greek_list)
             yes = random.choice(greek_list)
             no = random.choice(greek_list)
             ok = random.choice(greek_list)
 
-            # incorrect[1,2,3] are the incorrect countries.
+            # incorrect[1,2,3] are the incorrect deities.
             self.question = question_ans[1]
             self.answer = question_ans[0]
             # self.hint = question_ans[2]
@@ -585,13 +584,13 @@ class Norse:
         self.bottom_right_answer_button.config(state=NORMAL)
         self.next_button.config(state=DISABLED)
         self.answer_box.config(text="")
-        # chooses four different countries / capitals from the list
+        # chooses four different deities from the list
         question_ans = random.choice(norse_list)
         yes = random.choice(norse_list)
         no = random.choice(norse_list)
         ok = random.choice(norse_list)
 
-        # incorrect[1,2,3] are the incorrect countries.
+        # incorrect[1,2,3] are the incorrect deities.
         self.question = question_ans[1]
         self.answer = question_ans[0]
         # self.hint = question_ans[2]
@@ -774,13 +773,13 @@ class Egypt:
         self.bottom_right_answer_button.config(state=NORMAL)
         self.next_button.config(state=DISABLED)
         self.answer_box.config(text="")
-        # chooses four different countries / capitals from the list
+        # chooses four different deities from the list
         question_ans = random.choice(Egyptian_list)
         yes = random.choice(Egyptian_list)
         no = random.choice(Egyptian_list)
         ok = random.choice(Egyptian_list)
 
-        # incorrect[1,2,3] are the incorrect countries.
+        # incorrect[1,2,3] are the incorrect deities.
         self.question = question_ans[1]
         self.answer = question_ans[0]
         # self.hint = question_ans[2]
@@ -843,9 +842,6 @@ class End:
                                bg=background, font="Helvetica 10")
         self.end_stats.grid(row=1)
 
-        # Button grid row 2
-        # Three Different buttons.
-        # Export, Retry, Quit
         self.end_buttons = Frame(self.end_frame, bg=background)
         self.end_buttons.grid(row=2)
 
