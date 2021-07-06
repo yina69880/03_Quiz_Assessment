@@ -29,7 +29,7 @@ class Start:
         # Round warning text row 2
 
         self.round_warning = Label(self.start_frame, text=" If left blank, There will be endless rounds",
-                                   font="Helvetica 9 italic", fg="red")
+                                   font="Arial 9 italic", fg="red")
         self.round_warning.grid(row=2, column=0)
 
         # Frame for rounds row 3
@@ -37,11 +37,11 @@ class Start:
         self.round_frame.grid(row=3)
 
         # Round Label row 0.0
-        self.round_label = Label(self.round_frame, text="Rounds:", font="helvetica 15")
+        self.round_label = Label(self.round_frame, text="Rounds:", font="Arial 15")
         self.round_label.grid(row=0, column=0)
 
         # Round Entry row 0.1
-        self.round_entry = Entry(self.round_frame, font="Helvetica 20", bg="#FFFFFF"
+        self.round_entry = Entry(self.round_frame, font="Arial 20", bg="#FFFFFF"
                                  , width=5)
         self.round_entry.grid(row=0, column=1, padx=5, pady=5)
 
@@ -241,7 +241,7 @@ def to_quit():
 
 class Greek:
     def __init__(self, partner):
-        background = "#FFF4C3"
+        background = "#afeeee"
         # Import the csv file, name of csv file goes here...
         with open('Greek_gods_list.csv', 'r') as f:
             # make csv file into list
@@ -293,11 +293,11 @@ class Greek:
 
         # Gods Label row 0
         self.deity_label = Label(self.game_frame, text=self.question,
-                                   font="Helvetica 15 bold", bg=background)
+                                   font="Arial 15 bold", bg=background)
         self.deity_label.grid(row=0)
 
         # Label showing correct or incorrect row 1
-        self.answer_box = Label(self.game_frame, text="", font="Helvetica 12 italic", width=35, wrap=300, bg=background)
+        self.answer_box = Label(self.game_frame, text="", font="Arial 12 italic", width=35, wrap=300, bg=background)
         self.answer_box.grid(row=1)
 
         # Setup grid for answer buttons row 2
@@ -308,27 +308,27 @@ class Greek:
         wt = 20
         ht = 2
         wr = 160
-        ft = "Helvetica 15"
+        ft = "Arial 15"
 
         # Top level answers buttons row 2.0
         self.top_left_answer_button = Button(self.top_answers_frame, text=self.top_left,
-                                             font=ft, padx=5, pady=5, width=wt, height=ht, wrap=wr, bg="#EEE6D2",
+                                             font=ft, padx=5, pady=5, width=wt, height=ht, wrap=wr, bg="#007989",
                                              command=lambda: self.show_answer(self.top_left))
         self.top_left_answer_button.grid(column=0, row=0, padx=5, pady=5)
 
         self.top_right_answer_button = Button(self.top_answers_frame, text=self.top_right,
-                                              font=ft, padx=5, pady=5, width=wt, height=ht, wrap=wr, bg="#EEE6D2",
+                                              font=ft, padx=5, pady=5, width=wt, height=ht, wrap=wr, bg="#007989",
                                               command=lambda: self.show_answer(self.top_right))
         self.top_right_answer_button.grid(column=1, row=0, padx=5, pady=5)
 
         # Bottom level answers buttons row 2.1
         self.bottom_left_answer_button = Button(self.top_answers_frame, text=self.bottom_left,
-                                                font=ft, padx=5, pady=5, width=wt, height=ht, wrap=wr, bg="#EEE6D2",
+                                                font=ft, padx=5, pady=5, width=wt, height=ht, wrap=wr, bg="#007989",
                                                 command=lambda: self.show_answer(self.bottom_left))
         self.bottom_left_answer_button.grid(column=0, row=1, padx=5, pady=5)
 
         self.bottom_right_answer_button = Button(self.top_answers_frame, text=self.bottom_right,
-                                                 font=ft, padx=5, pady=5, width=wt, height=ht, wrap=wr, bg="#EEE6D2",
+                                                 font=ft, padx=5, pady=5, width=wt, height=ht, wrap=wr, bg="#007989",
                                                  command=lambda: self.show_answer(self.bottom_right))
         self.bottom_right_answer_button.grid(column=1, row=1, padx=5, pady=5)
 
@@ -344,14 +344,14 @@ class Greek:
         # The quit button so users can quit the game early row 0 column 1
         self.quit_button = Button(self.button_frame, text="End Game", command=lambda: self.to_end(self.game_history)
                                   , width=10,
-                                  font="Helvetica 10 bold")
+                                  font="Arial 10 bold")
         self.quit_button.grid(row=0, column=0, padx=5, pady=8)
 
 
         # The Next button to proceed to the next round row 0 column 2
         self.next_button = Button(self.button_frame, text="Next",
                                   command=lambda: self.to_next(my_list), width=10,
-                                  font="Helvetica 10 bold")
+                                  font="Arial 10 bold")
         self.next_button.grid(row=0, column=2, padx=5, pady=8)
         # Disable the next button initially,
         self.next_button.config(state=DISABLED)
@@ -485,11 +485,11 @@ class Norse:
 
         # Gods Label row 0
         self.deity_label = Label(self.game_frame, text=self.question,
-                                 font="Helvetica 15 bold", bg=background)
+                                 font="Arial 15 bold", bg=background)
         self.deity_label.grid(row=0)
 
         # Label showing correct or incorrect row 1
-        self.answer_box = Label(self.game_frame, text="", font="Helvetica 12 italic", width=35, wrap=300)
+        self.answer_box = Label(self.game_frame, text="", font="Arial 12 italic", width=35, wrap=300)
         self.answer_box.grid(row=1)
 
         # Setup grid for answer buttons row 2
@@ -500,7 +500,7 @@ class Norse:
         wt = 20
         ht = 2
         wr = 160
-        ft = "Helvetica 15"
+        ft = "Arial 15"
 
         # Top level answers buttons row 2.0
         self.top_left_answer_button = Button(self.top_answers_frame, text=self.top_left,
@@ -537,13 +537,13 @@ class Norse:
         # The quit button so users can quit the game early row 0 column 1
         self.quit_button = Button(self.button_frame, text="End Game", command=lambda: self.to_end(self.game_history)
                                   , width=10,
-                                  font="Helvetica 10 bold")
+                                  font="Arial 10 bold")
         self.quit_button.grid(row=0, column=0, padx=5, pady=8)
 
         # The Next button to proceed to the next round row 0 column 2
         self.next_button = Button(self.button_frame, text="Next",
                                   command=lambda: self.to_next(my_list), width=10,
-                                  font="Helvetica 10 bold")
+                                  font="Arial 10 bold")
         self.next_button.grid(row=0, column=2, padx=5, pady=8)
         # Disable the next button initially,
         self.next_button.config(state=DISABLED)
@@ -675,11 +675,11 @@ class Egypt:
 
         # Gods Label row 0
         self.deity_label = Label(self.game_frame, text=self.question,
-                                   font="Helvetica 15 bold", bg=background)
+                                   font="Arial 15 bold", bg=background)
         self.deity_label.grid(row=0)
 
         # Label showing correct or incorrect row 1
-        self.answer_box = Label(self.game_frame, text="", font="Helvetica 12 italic", width=35, wrap=300)
+        self.answer_box = Label(self.game_frame, text="", font="Arial 12 italic", width=35, wrap=300)
         self.answer_box.grid(row=1)
 
         # Setup grid for answer buttons row 2
@@ -690,7 +690,7 @@ class Egypt:
         wt = 20
         ht = 2
         wr = 160
-        ft = "Helvetica 15"
+        ft = "Arial 15"
 
         # Top level answers buttons row 2.0
         self.top_left_answer_button = Button(self.top_answers_frame, text=self.top_left,
@@ -726,14 +726,14 @@ class Egypt:
         # The quit button so users can quit the game early row 0 column 1
         self.quit_button = Button(self.button_frame, text="End Game", command=lambda: self.to_end(self.game_history)
                                   , width=10,
-                                  font="Helvetica 10 bold")
+                                  font="Arial 10 bold")
         self.quit_button.grid(row=0, column=0, padx=5, pady=8)
 
 
         # The Next button to proceed to the next round row 0 column 2
         self.next_button = Button(self.button_frame, text="Next",
                                   command=lambda: self.to_next(my_list), width=10,
-                                  font="Helvetica 10 bold")
+                                  font="Arial 10 bold")
         self.next_button.grid(row=0, column=2, padx=5, pady=8)
         # Disable the next button initially,
         self.next_button.config(state=DISABLED)
@@ -832,33 +832,33 @@ class End:
         self.end_box.protocol('WM_DELETE_WINDOW', to_quit)
 
         # Heading row 0
-        self.end_heading = Label(self.end_frame, text="Thanks for playing!", font="Helvetica 25 bold",
+        self.end_heading = Label(self.end_frame, text="Thanks for playing!", font="Arial 25 bold",
                                  bg=background)
         self.end_heading.grid(row=0, padx=10)
 
         # Game statistics row 1
         self.end_stats = Label(self.end_frame, text="You managed to get \n {} \n right out of \n {} \n\n"
                                                     "Accuracy percentage : {:.2f}%".format(score, played, percentage),
-                               bg=background, font="Helvetica 10")
+                               bg=background, font="Arial 10")
         self.end_stats.grid(row=1)
 
         self.end_buttons = Frame(self.end_frame, bg=background)
         self.end_buttons.grid(row=2)
 
         # Export button row 0 column 0
-        self.end_export_button = Button(self.end_buttons, text="Export", font="Helvetica 10 bold",
+        self.end_export_button = Button(self.end_buttons, text="Export", font="Arial 10 bold",
                                         command=lambda: self.to_export(history, difficulty, score, percentage,
                                                                        played), width=10
                                         , bg="#abd7eb", height=2)
         self.end_export_button.grid(row=0, column=0, padx=6, pady=5)
 
         # Retry Button row 0 column 1
-        self.end_retry_button = Button(self.end_buttons, text="Play Again!", font="Helvetica 10 bold",
+        self.end_retry_button = Button(self.end_buttons, text="Play Again!", font="Arial 10 bold",
                                        command=self.to_start, width=10, bg="#EEEE9B", height=2)
         self.end_retry_button.grid(row=0, column=1, padx=6, pady=5)
 
         # Quit button row 0 column 2
-        self.end_quit_button = Button(self.end_buttons, text="Quit", font="Helvetica 10 bold",
+        self.end_quit_button = Button(self.end_buttons, text="Quit", font="Arial 10 bold",
                                       command=root.quit, width=10, bg="#F47174", height=2)
         self.end_quit_button.grid(row=0, column=2, padx=6, pady=5)
 
