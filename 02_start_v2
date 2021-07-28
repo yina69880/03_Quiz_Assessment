@@ -2,8 +2,7 @@ from tkinter import *
 from functools import partial
 import random
 import csv
-
-
+import re
 
 
 class Start:
@@ -15,34 +14,22 @@ class Start:
         self.start_frame.grid()
 
         # deity header text
-
         self.setup_text = Label(self.start_frame, text="Legendary Figures Quiz", font=("Arial", "16", "bold"))
         self.setup_text.grid(row=0, pady=5)
 
         # instruction text
-
         self.instructions_text = Label(self.start_frame, text="Please select the culture you wanna play \n",
                                        font=("Arial", "9"))
         self.instructions_text.grid(row=1, pady=5)
 
         # Round warning text row 2
-
-        self.round_warning = Label(self.start_frame, text=" If left blank, There will be endless rounds",
+        self.round_warning = Label(self.start_frame, text="There will be endless rounds until you press 'End Game'",
                                    font="Arial 9 italic", fg="red")
         self.round_warning.grid(row=2, column=0)
 
         # Frame for rounds row 3
         self.round_frame = Frame(self.start_frame)
         self.round_frame.grid(row=3)
-
-        # Round Label row 0.0
-        self.round_label = Label(self.round_frame, text="Rounds:", font="Arial 15")
-        self.round_label.grid(row=0, column=0)
-
-        # Round Entry row 0.1
-        self.round_entry = Entry(self.round_frame, font="Arial 20", bg="#FFFFFF"
-                                 , width=5)
-        self.round_entry.grid(row=0, column=1, padx=5, pady=5)
 
         # to_game button frame row 4
         self.to_game_frame = Frame(self.start_frame)
@@ -69,105 +56,66 @@ class Start:
 
 
     def to_greek (self):
-        self.rounds=self.round_entry.get()
-        if self.rounds == "":
-            self.rounds = int(999999999)
+            self.rounds = 999999999
             self.infinity = 1
             Greek(self)
-        else:
-            try:
-                self.rounds = int(self.rounds)
-                self.infinity = 0
-                if self.rounds >= 1:
-                        Greek(self)
-                else:
-                    self.round_warning.config(bg="red", text="Please enter a number or remain blank", fg="#FFFFFF")
-                    self.round_entry.delete(0, "end")
-            except ValueError:
-                self.round_warning.config(bg="red",text="Please enter a number or remain blank",fg="#FFFFFF")
-                self.round_entry.delete(0,"end")
+
 
     def to_norse (self):
-        self.rounds=self.round_entry.get()
-        if self.rounds == "":
-            self.rounds = int(999999999)
+            self.rounds = 999999999
             self.infinity = 1
             Norse(self)
-        else:
-            try:
-                self.rounds = int(self.rounds)
-                self.infinity = 0
-                if self.rounds >= 1:
-                        Norse(self)
-                else:
-                    self.round_warning.config(bg="red", text="Please enter a number or remain blank", fg="#FFFFFF")
-                    self.round_entry.delete(0, "end")
-            except ValueError:
-                self.round_warning.config(bg="red",text="Please enter a number or remain blank",fg="#FFFFFF")
-                self.round_entry.delete(0,"end")
 
     def to_egyptian (self):
-        self.rounds=self.round_entry.get()
-        if self.rounds == "":
-            self.rounds = int(999999999)
+            self.rounds = 999999999
             self.infinity = 1
             Egypt(self)
-        else:
-            try:
-                self.rounds = int(self.rounds)
-                self.infinity = 0
-                if self.rounds >= 1:
-                        Egypt(self)
-                else:
-                    self.round_warning.config(bg="red", text="Please enter a number or remain blank", fg="#FFFFFF")
-                    self.round_entry.delete(0, "end")
-            except ValueError:
-                self.round_warning.config(bg="red",text="Please enter a number or remain blank",fg="#FFFFFF")
-                self.round_entry.delete(0,"end")
-
-        # frame for answer options
-
-        self.answer_frame = Frame(self.start_frame)
-        self.answer_frame.grid(row=2, pady=5)
-
-        # Answer buttons
-
-        # row 1
-
-        self.norse_button = Button(self.answer_frame, text="Norse", width=10, height=2,
-                                          command=lambda: self.update_numbers(self.norse_button, "top"))
-        self.norse_button.grid(row=0, column=0, padx=5, pady=5)
-
-        self.greek_button = Button(self.answer_frame, text="Greek", width=10, height=2,
-                                          command=lambda: self.update_numbers(self.greek_button, "top"))
-        self.greek_button.grid(row=0, column=1, padx=5, pady=5)
-
-        self.egyptian_button = Button(self.answer_frame, text="Egyptian", width=10, height=2,
-                                          command=lambda: self.update_numbers(self.egyptian_button, "top"))
-        self.egyptian_button.grid(row=0, column=2, padx=5, pady=5)
 
 
-        #bottom buttons
 
-        # frame for given options
+            # frame for answer options
 
-        self.given_frame = Frame(self.start_frame)
-        self.given_frame.grid(row=4, pady=5)
+            self.answer_frame = Frame(self.start_frame)
+            self.answer_frame.grid(row=2, pady=5)
 
-        # Given buttons
+            # Answer buttons
+
+            # row 1
+
+            self.norse_button = Button(self.answer_frame, text="Norse", width=10, height=2,
+                                              command=lambda: self.update_numbers(self.norse_button, "top"))
+            self.norse_button.grid(row=0, column=0, padx=5, pady=5)
+
+            self.greek_button = Button(self.answer_frame, text="Greek", width=10, height=2,
+                                              command=lambda: self.update_numbers(self.greek_button, "top"))
+            self.greek_button.grid(row=0, column=1, padx=5, pady=5)
+
+            self.egyptian_button = Button(self.answer_frame, text="Egyptian", width=10, height=2,
+                                              command=lambda: self.update_numbers(self.egyptian_button, "top"))
+            self.egyptian_button.grid(row=0, column=2, padx=5, pady=5)
 
 
-        # frame for buttons
+            #bottom buttons
 
-        self.play_quit_button_frame = Frame(self.start_frame)
-        self.play_quit_button_frame.grid(row=6, pady=5)
+            # frame for given options
+
+            self.given_frame = Frame(self.start_frame)
+            self.given_frame.grid(row=4, pady=5)
+
+            # Given buttons
 
 
-        # quit button
+            # frame for buttons
 
-        self.quit_button = Button(self.play_quit_button_frame, text="Quit",
-                                  command=partial(root.destroy))
-        self.quit_button.grid(row=0, column=1, padx=5)
+            self.play_quit_button_frame = Frame(self.start_frame)
+            self.play_quit_button_frame.grid(row=6, pady=5)
+
+
+            # quit button
+
+            self.quit_button = Button(self.play_quit_button_frame, text="Quit",
+                                      command=partial(root.destroy))
+            self.quit_button.grid(row=0, column=1, padx=5)
 
     def open_play(self):
         Play(self)
@@ -264,10 +212,13 @@ class Greek:
 
         # chooses four different cultures from the list
         question_ans = random.choice(my_list)
+        if self.infinity == 0:
+            my_list.remove(question_ans)
+        else:
+            pass
         yes = random.choice(my_list)
         no = random.choice(my_list)
         ok = random.choice(my_list)
-
         # incorrect[1,2,3] are the incorrect gods
         self.question = question_ans[1]
         self.answer = question_ans[0]
@@ -371,7 +322,7 @@ class Greek:
 
         # Check if button is correct.
         if location == self.answer:
-            self.answer_box.config(text="Correct!", fg="#b1ffc3")
+            self.answer_box.config(text="Correct!", fg="#40E0D0")
             self.score += 1
             correct_answer = "{}, the answer was {} \u2713".format(self.question,self.answer)
             self.game_history.append(correct_answer)
@@ -390,6 +341,7 @@ class Greek:
             self.bottom_right_answer_button.config(state=NORMAL)
             self.next_button.config(state=DISABLED)
             self.answer_box.config(text="")
+
             # chooses four different deities from the list
             question_ans = random.choice(greek_list)
             yes = random.choice(greek_list)
@@ -426,8 +378,8 @@ class Greek:
                                                    command=lambda: self.show_answer(self.bottom_right))
 
     def to_end(self,history):
-        easy=1
-        End(self.score,history,easy,self.played)
+        greek = 1
+        End(self.score,history, greek,self.played)
         self.game_box.destroy()
 
 class Norse:
@@ -547,7 +499,6 @@ class Norse:
         self.next_button.config(state=DISABLED)
 
     def show_answer(self, location):
-
         # Disable all the buttons
         self.top_left_answer_button.config(state=DISABLED)
         self.top_right_answer_button.config(state=DISABLED)
@@ -576,44 +527,44 @@ class Norse:
         self.score_label.config(text="{} correct / {} rounds played".format(self.score, self.played))
 
     def to_next(self, norse_list):
-        self.top_left_answer_button.config(state=NORMAL)
-        self.top_right_answer_button.config(state=NORMAL)
-        self.bottom_left_answer_button.config(state=NORMAL)
-        self.bottom_right_answer_button.config(state=NORMAL)
-        self.next_button.config(state=DISABLED)
-        self.answer_box.config(text="")
-        # chooses four different deities from the list
-        question_ans = random.choice(norse_list)
-        yes = random.choice(norse_list)
-        no = random.choice(norse_list)
-        ok = random.choice(norse_list)
+            self.top_left_answer_button.config(state=NORMAL)
+            self.top_right_answer_button.config(state=NORMAL)
+            self.bottom_left_answer_button.config(state=NORMAL)
+            self.bottom_right_answer_button.config(state=NORMAL)
+            self.next_button.config(state=DISABLED)
+            self.answer_box.config(text="")
+            # chooses four different deities from the list
+            question_ans = random.choice(norse_list)
+            yes = random.choice(norse_list)
+            no = random.choice(norse_list)
+            ok = random.choice(norse_list)
 
-        # incorrect[1,2,3] are the incorrect deities.
-        self.question = question_ans[1]
-        self.answer = question_ans[0]
-        # self.hint = question_ans[2]
-        incorrect1 = yes[0]
-        incorrect2 = no[0]
-        incorrect3 = ok[0]
-        print(question_ans)
+            # incorrect[1,2,3] are the incorrect deities.
+            self.question = question_ans[1]
+            self.answer = question_ans[0]
+            # self.hint = question_ans[2]
+            incorrect1 = yes[0]
+            incorrect2 = no[0]
+            incorrect3 = ok[0]
+            print(question_ans)
 
-        self.deity_label.config(text=self.question)
+            self.deity_label.config(text=self.question)
 
-        # I made the button_list a list so the list can be randomized so that the answer button locations is always different.
-        button_list = [self.answer, incorrect1, incorrect2, incorrect3]
-        random.shuffle(button_list)
-        self.top_left = button_list[0]
-        self.top_right = button_list[1]
-        self.bottom_left = button_list[2]
-        self.bottom_right = button_list[3]
+            # I made the button_list a list so the list can be randomized so that the answer button locations is always different.
+            button_list = [self.answer, incorrect1, incorrect2, incorrect3]
+            random.shuffle(button_list)
+            self.top_left = button_list[0]
+            self.top_right = button_list[1]
+            self.bottom_left = button_list[2]
+            self.bottom_right = button_list[3]
 
-        # Defining the randomized list to their corresponding buttons
-        self.top_left_answer_button.config(text=self.top_left, command=lambda: self.show_answer(self.top_left))
-        self.top_right_answer_button.config(text=self.top_right, command=lambda: self.show_answer(self.top_right))
-        self.bottom_left_answer_button.config(text=self.bottom_left,
-                                              command=lambda: self.show_answer(self.bottom_left))
-        self.bottom_right_answer_button.config(text=self.bottom_right,
-                                               command=lambda: self.show_answer(self.bottom_right))
+            # Defining the randomized list to their corresponding buttons
+            self.top_left_answer_button.config(text=self.top_left, command=lambda: self.show_answer(self.top_left))
+            self.top_right_answer_button.config(text=self.top_right, command=lambda: self.show_answer(self.top_right))
+            self.bottom_left_answer_button.config(text=self.bottom_left,
+                                                  command=lambda: self.show_answer(self.bottom_left))
+            self.bottom_right_answer_button.config(text=self.bottom_right,
+                                                   command=lambda: self.show_answer(self.bottom_right))
     def to_end(self, history):
         easy = 1
         End(self.score, history, easy, self.played)
@@ -668,7 +619,7 @@ class Egypt:
         self.bottom_left = buttons_list[2]
         self.bottom_right = buttons_list[3]
 
-        # GUI SetupF
+        # GUI Setup
         self.game_box = Toplevel(bg=background)
         self.game_frame = Frame(self.game_box, bg=background)
         self.game_frame.grid()
@@ -768,44 +719,44 @@ class Egypt:
         self.score_label.config(text="{} correct / {} rounds played".format(self.score, self.played))
 
     def to_next(self, Egyptian_list):
-        self.top_left_answer_button.config(state=NORMAL)
-        self.top_right_answer_button.config(state=NORMAL)
-        self.bottom_left_answer_button.config(state=NORMAL)
-        self.bottom_right_answer_button.config(state=NORMAL)
-        self.next_button.config(state=DISABLED)
-        self.answer_box.config(text="")
-        # chooses four different deities from the list
-        question_ans = random.choice(Egyptian_list)
-        yes = random.choice(Egyptian_list)
-        no = random.choice(Egyptian_list)
-        ok = random.choice(Egyptian_list)
+            self.top_left_answer_button.config(state=NORMAL)
+            self.top_right_answer_button.config(state=NORMAL)
+            self.bottom_left_answer_button.config(state=NORMAL)
+            self.bottom_right_answer_button.config(state=NORMAL)
+            self.next_button.config(state=DISABLED)
+            self.answer_box.config(text="")
+            # chooses four different deities from the list
+            question_ans = random.choice(Egyptian_list)
+            yes = random.choice(Egyptian_list)
+            no = random.choice(Egyptian_list)
+            ok = random.choice(Egyptian_list)
 
-        # incorrect[1,2,3] are the incorrect deities.
-        self.question = question_ans[1]
-        self.answer = question_ans[0]
-        # self.hint = question_ans[2]
-        incorrect1 = yes[0]
-        incorrect2 = no[0]
-        incorrect3 = ok[0]
-        print(question_ans)
+            # incorrect[1,2,3] are the incorrect deities.
+            self.question = question_ans[1]
+            self.answer = question_ans[0]
+            # self.hint = question_ans[2]
+            incorrect1 = yes[0]
+            incorrect2 = no[0]
+            incorrect3 = ok[0]
+            print(question_ans)
 
-        self.deity_label.config(text=self.question)
+            self.deity_label.config(text=self.question)
 
-        # I made the button_list a list so the list can be randomized so that the answer button locations is always different.
-        button_list = [self.answer, incorrect1, incorrect2, incorrect3]
-        random.shuffle(button_list)
-        self.top_left = button_list[0]
-        self.top_right = button_list[1]
-        self.bottom_left = button_list[2]
-        self.bottom_right = button_list[3]
+            # I made the button_list a list so the list can be randomized so that the answer button locations is always different.
+            button_list = [self.answer, incorrect1, incorrect2, incorrect3]
+            random.shuffle(button_list)
+            self.top_left = button_list[0]
+            self.top_right = button_list[1]
+            self.bottom_left = button_list[2]
+            self.bottom_right = button_list[3]
 
-        # Defining the randomized list to their corresponding buttons
-        self.top_left_answer_button.config(text=self.top_left, command=lambda: self.show_answer(self.top_left))
-        self.top_right_answer_button.config(text=self.top_right, command=lambda: self.show_answer(self.top_right))
-        self.bottom_left_answer_button.config(text=self.bottom_left,
-                                              command=lambda: self.show_answer(self.bottom_left))
-        self.bottom_right_answer_button.config(text=self.bottom_right,
-                                               command=lambda: self.show_answer(self.bottom_right))
+            # Defining the randomized list to their corresponding buttons
+            self.top_left_answer_button.config(text=self.top_left, command=lambda: self.show_answer(self.top_left))
+            self.top_right_answer_button.config(text=self.top_right, command=lambda: self.show_answer(self.top_right))
+            self.bottom_left_answer_button.config(text=self.bottom_left,
+                                                  command=lambda: self.show_answer(self.bottom_left))
+            self.bottom_right_answer_button.config(text=self.bottom_right,
+                                                   command=lambda: self.show_answer(self.bottom_right))
 
 
     def to_end(self,history):
@@ -1005,20 +956,6 @@ if __name__ == "__main__":
     root.title("Legendary Figures Quiz")
     something = Start()
     root.mainloop()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
