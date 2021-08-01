@@ -18,12 +18,12 @@ class Start:
         self.setup_text.grid(row=0, pady=5)
 
         # instruction text
-        self.instructions_text = Label(self.start_frame, text="Please select the culture you wanna play \n",
+        self.instructions_text = Label(self.start_frame, text="Please select the culture you wanna play below: \n",
                                        font=("Arial", "9"))
         self.instructions_text.grid(row=1, pady=5)
 
         # Round warning text row 2
-        self.round_warning = Label(self.start_frame, text="There will be endless rounds until you press 'End Game'",
+        self.round_warning = Label(self.start_frame, text=" You will be able to play endless rounds of the chosen culture until you press 'End Game'",
                                    font="Arial 9 italic", fg="red")
         self.round_warning.grid(row=2, column=0)
 
@@ -282,7 +282,7 @@ class Greek:
             correct_answer = "{}, the answer was {} \u2713".format(self.question,self.answer)
             self.game_history.append(correct_answer)
         else:
-            self.answer_box.config(text="Incorrect, correct deity is {}".format(self.answer), fg="red")
+            self.answer_box.config(text="Incorrect, the correct deity is {}".format(self.answer), fg="red")
             incorrect_answer = "{}, the answer was {} \u274c, you answered {}".format(self.question,self.answer,location)
             self.game_history.append(incorrect_answer)
 
@@ -473,7 +473,7 @@ class Norse:
             correct_answer = "{}, the answer was {} \u2713".format(self.question, self.answer)
             self.game_history.append(correct_answer)
         else:
-            self.answer_box.config(text="Incorrect, correct deity is {}".format(self.answer), fg="#658eff")
+            self.answer_box.config(text="Incorrect, the correct deity is {}".format(self.answer), fg="#658eff")
             incorrect_answer = "{}, the answer was {} \u274c, you answered {}".format(self.question, self.answer,
                                                                                       location)
             self.game_history.append(incorrect_answer)
@@ -666,7 +666,7 @@ class Egypt:
             correct_answer = "{}, the answer was {} \u2713".format(self.question,self.answer)
             self.game_history.append(correct_answer)
         else:
-            self.answer_box.config(text="Incorrect, correct deity is {}".format(self.answer), fg="red")
+            self.answer_box.config(text="Incorrect, the correct deity is {}".format(self.answer), fg="red")
             incorrect_answer = "{}, the answer was {} \u274c, you answered {}".format(self.question,self.answer,location)
             self.game_history.append(incorrect_answer)
 

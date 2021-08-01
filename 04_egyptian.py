@@ -4,6 +4,8 @@ import random
 import csv
 
 
+
+
 class Start:
     def __init__(self):
         self.rounds = 0
@@ -30,19 +32,6 @@ class Start:
                                    font="Helvetica 9 italic", fg="red")
         self.round_warning.grid(row=2, column=0)
 
-        # Frame for rounds row 3
-        self.round_frame = Frame(self.start_frame)
-        self.round_frame.grid(row=3)
-
-        # Round Label row 0.0
-        self.round_label = Label(self.round_frame, text="Rounds:", font="helvetica 15")
-        self.round_label.grid(row=0, column=0)
-
-        # Round Entry row 0.1
-        self.round_entry = Entry(self.round_frame, font="Helvetica 20", bg="#FFFFFF"
-                                 , width=5)
-        self.round_entry.grid(row=0, column=1, padx=5, pady=5)
-
         # to_game button frame row 4
         self.to_game_frame = Frame(self.start_frame)
         self.to_game_frame.grid(row=4)
@@ -50,58 +39,16 @@ class Start:
         # Button Font
         button_font = "Arial 15 bold"
 
-        # to_greek buttons row 4.1
-        self.greek_button = Button(self.to_game_frame, text="Greek", font=button_font,
-                                  command=self.to_greek, height=2, width=13, borderwidth=2,relief="raised")
-        self.greek_button.grid(row=0, column=1, padx=10, pady=5)
+        # to_egyptian buttons row 4.0
+        self.egyptian_button = Button(self.to_game_frame, text="Egyptian", font=button_font,
+                                  command=self.to_egyptian, height=2, width=13, borderwidth=2,relief="raised")
+        self.egyptian_button.grid(row=0, column=0, padx=10, pady=5)
 
 
-    def to_greek (self):
-        self.rounds=self.round_entry.get()
-        if self.rounds == "":
+    def to_egyptian(self):
             self.rounds = int(999999999)
             self.infinity = 1
-            Greek(self)
-        else:
-            try:
-                self.rounds = int(self.rounds)
-                self.infinity = 0
-                if self.rounds >= 1:
-                        Greek(self)
-                else:
-                    self.round_warning.config(bg="red", text="Please enter a number or remain blank", fg="#FFFFFF")
-                    self.round_entry.delete(0, "end")
-            except ValueError:
-                self.round_warning.config(bg="red",text="Please enter a number or remain blank",fg="#FFFFFF")
-                self.round_entry.delete(0,"end")
-
-                # frame for answer options
-
-        self.answer_frame = Frame(self.start_frame)
-        self.answer_frame.grid(row=2, pady=5)
-
-        self.greek_button = Button(self.answer_frame, text="Greek", width=10, height=2,
-                                          command=lambda: self.update_numbers(self.greek_button, "top"))
-        self.greek_button.grid(row=0, column=1, padx=5, pady=5)
-
-        # frame for given options
-
-        self.given_frame = Frame(self.start_frame)
-        self.given_frame.grid(row=4, pady=5)
-
-        # Given buttons
-
-
-        # frame for buttons
-
-        self.play_quit_button_frame = Frame(self.start_frame)
-        self.play_quit_button_frame.grid(row=6, pady=5)
-
-        # quit button
-
-        self.quit_button = Button(self.play_quit_button_frame, text="Quit",
-                                  command=partial(root.destroy))
-        self.quit_button.grid(row=0, column=1, padx=5)
+            Egypt(self)
 
     def open_play(self):
         Play(self)
@@ -165,11 +112,11 @@ class Play:
 def to_quit():
             root.destroy()
 
-class Greek:
+class Egypt:
     def __init__(self, partner):
         background = "#FFF4C3"
         # Import the csv file, name of csv file goes here...
-        with open('Greek_gods_list.csv', 'r') as f:
+        with open('Egyptian_gods.csv', 'r') as f:
             # make csv file into list
             file = csv.reader(f)
             next(f)
@@ -223,7 +170,7 @@ class Greek:
         self.deity_label.grid(row=0)
 
         # Label showing correct or incorrect row 1
-        self.answer_box = Label(self.game_frame, text="", font="Helvetica 12 italic", width=35, wrap=300, bg=background)
+        self.answer_box = Label(self.game_frame, text="", font="Helvetica 12 italic", width=35, wrap=300)
         self.answer_box.grid(row=1)
 
         # Setup grid for answer buttons row 2
@@ -263,15 +210,10 @@ class Greek:
                                  bg=background)
         self.score_label.grid(row=3)
 
-        # Button frames for next, quit row 4
+        # Button frames for next, quit and hint button row 4
         self.button_frame = Frame(self.game_box, bg=background)
         self.button_frame.grid(row=4)
 
-        # The quit button so users can quit the game early row 0 column 1
-        self.quit_button = Button(self.button_frame, text="End Game", command=lambda: self.to_end(self.game_history)
-                                  , width=10,
-                                  font="Helvetica 10 bold")
-        self.quit_button.grid(row=0, column=0, padx=5, pady=8)
 
 
         # The Next button to proceed to the next round row 0 column 2
@@ -298,64 +240,60 @@ class Greek:
 
         # Check if button is correct.
         if location == self.answer:
-            self.answer_box.config(text="Correct!", fg="green")
+            self.answer_box.config(text="Correct!", fg="green", bg="#FFF4C3")
             self.score += 1
             correct_answer = "{}, the answer was {} \u2713".format(self.question,self.answer)
             self.game_history.append(correct_answer)
         else:
-            self.answer_box.config(text="Incorrect, correct deity is {}".format(self.answer), fg="red")
+            self.answer_box.config(text="Incorrect, the correct deity is {}".format(self.answer), fg="red", bg="#FFF4C3")
             incorrect_answer = "{}, the answer was {} \u274c, you answered {}".format(self.question,self.answer,location)
             self.game_history.append(incorrect_answer)
 
         # Update the score that the user has
         self.score_label.config(text="{} correct / {} rounds played".format(self.score, self.played))
 
-    def to_next(self, greek_list):
-            self.top_left_answer_button.config(state=NORMAL)
-            self.top_right_answer_button.config(state=NORMAL)
-            self.bottom_left_answer_button.config(state=NORMAL)
-            self.bottom_right_answer_button.config(state=NORMAL)
-            self.next_button.config(state=DISABLED)
-            self.answer_box.config(text="")
-            # chooses four different deities from the list
-            question_ans = random.choice(greek_list)
-            yes = random.choice(greek_list)
-            no = random.choice(greek_list)
-            ok = random.choice(greek_list)
+    def to_next(self, Egyptian_list):
+        self.top_left_answer_button.config(state=NORMAL)
+        self.top_right_answer_button.config(state=NORMAL)
+        self.bottom_left_answer_button.config(state=NORMAL)
+        self.bottom_right_answer_button.config(state=NORMAL)
+        self.next_button.config(state=DISABLED)
+        self.answer_box.config(text="")
+        # chooses four different deities from the list
+        question_ans = random.choice(Egyptian_list)
+        yes = random.choice(Egyptian_list)
+        no = random.choice(Egyptian_list)
+        ok = random.choice(Egyptian_list)
 
-            # incorrect[1,2,3] are the incorrect deities.
-            self.question = question_ans[1]
-            self.answer = question_ans[0]
-            # self.hint = question_ans[2]
-            incorrect1 = yes[0]
-            incorrect2 = no[0]
-            incorrect3 = ok[0]
-            print(question_ans)
+        # incorrect[1,2,3] are the incorrect deities.
+        self.question = question_ans[1]
+        self.answer = question_ans[0]
+        # self.hint = question_ans[2]
+        incorrect1 = yes[0]
+        incorrect2 = no[0]
+        incorrect3 = ok[0]
+        print(question_ans)
 
-            self.deity_label.config(text=self.question)
+        self.deity_label.config(text=self.question)
 
-            # I made the button_list a list so the list can be randomized so that the answer button locations is always different.
-            button_list = [self.answer, incorrect1, incorrect2, incorrect3]
-            random.shuffle(button_list)
-            self.top_left = button_list[0]
-            self.top_right = button_list[1]
-            self.bottom_left = button_list[2]
-            self.bottom_right = button_list[3]
+        # I made the button_list a list so the list can be randomized so that the answer button locations is always different.
+        button_list = [self.answer, incorrect1, incorrect2, incorrect3]
+        random.shuffle(button_list)
+        self.top_left = button_list[0]
+        self.top_right = button_list[1]
+        self.bottom_left = button_list[2]
+        self.bottom_right = button_list[3]
+
+        # Defining the randomized list to their corresponding buttons
+        self.top_left_answer_button.config(text=self.top_left, command=lambda: self.show_answer(self.top_left))
+        self.top_right_answer_button.config(text=self.top_right, command=lambda: self.show_answer(self.top_right))
+        self.bottom_left_answer_button.config(text=self.bottom_left,
+                                              command=lambda: self.show_answer(self.bottom_left))
+        self.bottom_right_answer_button.config(text=self.bottom_right,
+                                               command=lambda: self.show_answer(self.bottom_right))
 
 
 
-            # Defining the randomized list to their corresponding buttons
-            self.top_left_answer_button.config(text=self.top_left, command=lambda: self.show_answer(self.top_left))
-            self.top_right_answer_button.config(text=self.top_right, command=lambda: self.show_answer(self.top_right))
-            self.bottom_left_answer_button.config(text=self.bottom_left,
-                                                  command=lambda: self.show_answer(self.bottom_left))
-            self.bottom_right_answer_button.config(text=self.bottom_right,
-                                                   command=lambda: self.show_answer(self.bottom_right))
-
-    def to_end(self,history):
-        easy=1
-        End(self.score,history,easy,self.played)
-        self.game_box.destroy()
 
 
 
@@ -365,3 +303,5 @@ if __name__ == "__main__":
     root.title("Legendary Figures Quiz")
     something = Start()
     root.mainloop()
+
+
